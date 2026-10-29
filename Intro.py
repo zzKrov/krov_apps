@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 # CONFIGURACIÓN GENERAL DEL PORTAFOLIO
 # ============================================================
 st.set_page_config(
-    page_title="Krov Industries // Portafolio Maestro de IA",
+    page_title="Krov Industries // Portafolio",
     page_icon="⚜",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -796,7 +796,7 @@ def generar_svg_hud(tipo: str, color_hex: str):
 # ============================================================
 render_clean_html(generar_svg_emblema())
 render_clean_html('<div class="brand-signature">Krov Industries · Plataforma de Aplicaciones</div>')
-render_clean_html('<div class="main-title">Ecosistema de Inteligencia Artificial</div>')
+render_clean_html('<div class="main-title">Interfaces Multimodales</div>')
 render_clean_html('<div class="sub-lead">16 soluciones prácticas de visión artificial, modelos de lenguaje, procesamiento acústico y redes neuronales diseñadas para interactuar de forma natural y veloz.</div>')
 
 # Métricas Globales
