@@ -1,45 +1,23 @@
 import streamlit as st
 import streamlit.components.v1 as components
+import json
 
 # ==============================================================================
 # 1. CONFIGURACIÓN GENERAL Y FAVICON
 # ==============================================================================
 st.set_page_config(
-    page_title="Portafolio // Sistemas e Interfaces",
+    page_title="Portafolio // Sistemas e Interfaces Multimodales",
     page_icon="💠",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
 
-# Compactador estricto para evitar fugas de código Markdown (<pre><code>)
 def render_clean_html(html_str: str):
     compact = "".join(line.strip() for line in html_str.splitlines() if line.strip())
     st.markdown(compact, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. ESTADO DE SESIÓN
-# ==============================================================================
-if "selected_id" not in st.session_state:
-    st.session_state.selected_id = 1
-
-if "visited_apps" not in st.session_state:
-    st.session_state.visited_apps = set()
-
-# ==============================================================================
-# 3. PALETA POR DOMINIO (AZULES, PÚRPURAS Y PLATINO)
-# ==============================================================================
-DOMINIOS = {
-    "Visión y Óptica":           {"color": "#38bdf8", "tag": "Cian Eléctrico"},
-    "IoT y Ciberfísica":         {"color": "#22d3ee", "tag": "Cian Digital"},
-    "Actuación y Hardware":      {"color": "#3b82f6", "tag": "Zafiro Estelar"},
-    "Lenguaje y RAG":            {"color": "#818cf8", "tag": "Índigo Vectorial"},
-    "Voz y Acústica":            {"color": "#c084fc", "tag": "Violeta Vocal"},
-    "Redes y Modelado":          {"color": "#8b5cf6", "tag": "Púrpura Real"},
-    "Interacción y Creatividad": {"color": "#6366f1", "tag": "Cobalto Profundo"}
-}
-
-# ==============================================================================
-# 4. CATÁLOGO MAESTRO (19 APLICACIONES // LENGUAJE LACÓNICO)
+# 2. CATÁLOGO MAESTRO (19 APLICACIONES // LENGUAJE LACÓNICO)
 # ==============================================================================
 CATALOGO = [
     {
@@ -49,9 +27,9 @@ CATALOGO = [
         "url": "https://yolozz.streamlit.app",
         "icon": "🎯",
         "svg_type": "vision",
-        "desc": "Encuadra y cuantifica 80 clases comunes de objetos en video e imágenes.",
-        "uso": "Control de aforo y logística de inventario.",
-        "color": DOMINIOS["Visión y Óptica"]["color"]
+        "desc": "Encuadra y cuantifica 80 clases comunes de objetos en imágenes o video en vivo.",
+        "uso": "Control de aforo y logística de inventario en bodegas.",
+        "color": "#38bdf8"
     },
     {
         "id": 2,
@@ -60,9 +38,9 @@ CATALOGO = [
         "url": "https://wordcloudz.streamlit.app",
         "icon": "☁️",
         "svg_type": "text",
-        "desc": "Composición gráfica ponderada según la frecuencia léxica del texto.",
-        "uso": "Extracción rápida de conceptos clave en reseñas.",
-        "color": DOMINIOS["Lenguaje y RAG"]["color"]
+        "desc": "Composición gráfica ponderada según la densidad de frecuencia léxica del texto.",
+        "uso": "Extracción rápida de conceptos preponderantes en encuestas.",
+        "color": "#818cf8"
     },
     {
         "id": 3,
@@ -71,9 +49,9 @@ CATALOGO = [
         "url": "https://mnistz.streamlit.app",
         "icon": "✍️",
         "svg_type": "neural",
-        "desc": "Reconocimiento de números manuscritos del 0 al 9 trazados en pantalla.",
-        "uso": "Digitalización de formularios y comprobantes bancarios.",
-        "color": DOMINIOS["Redes y Modelado"]["color"]
+        "desc": "Reconocimiento y clasificación de números manuscritos del 0 al 9 sobre lienzo.",
+        "uso": "Digitalización automática de formularios y cheques bancarios.",
+        "color": "#8b5cf6"
     },
     {
         "id": 4,
@@ -82,9 +60,9 @@ CATALOGO = [
         "url": "https://visionz.streamlit.app",
         "icon": "👁️",
         "svg_type": "vision",
-        "desc": "Evaluación semántica y redacción técnica descriptiva de cualquier escena.",
-        "uso": "Inspección pericial de daños e informes de aseguradoras.",
-        "color": DOMINIOS["Visión y Óptica"]["color"]
+        "desc": "Evaluación semántica y redacción técnica estructurada de cualquier escena fotográfica.",
+        "uso": "Inspección pericial de siniestros para aseguradoras.",
+        "color": "#38bdf8"
     },
     {
         "id": 5,
@@ -93,9 +71,9 @@ CATALOGO = [
         "url": "https://traductorz.streamlit.app",
         "icon": "🎙️",
         "svg_type": "audio",
-        "desc": "Captura vocal por micrófono, traducción inmediata y reproducción fonética.",
-        "uso": "Comunicación multilingüe en ventanillas de servicio.",
-        "color": DOMINIOS["Voz y Acústica"]["color"]
+        "desc": "Captura vocal por micrófono, traducción instantánea y reproducción fonética.",
+        "uso": "Atención multilingüe presencial en ventanillas de servicio.",
+        "color": "#c084fc"
     },
     {
         "id": 6,
@@ -104,9 +82,9 @@ CATALOGO = [
         "url": "https://teachablez.streamlit.app",
         "icon": "🛡️",
         "svg_type": "vision",
-        "desc": "Monitoreo corporal en cliente sin subir video a servidores externos.",
-        "uso": "Supervisión ergonómica e interfaces sin contacto físico.",
-        "color": DOMINIOS["Visión y Óptica"]["color"]
+        "desc": "Monitoreo corporal y presencia axial desde cámara web sin transmisión a la nube.",
+        "uso": "Supervisión ergonómica laboral y quioscos sin contacto.",
+        "color": "#38bdf8"
     },
     {
         "id": 7,
@@ -115,9 +93,9 @@ CATALOGO = [
         "url": "https://bendover.streamlit.app",
         "icon": "🐇",
         "svg_type": "creative",
-        "desc": "Entorno antiestrés con partículas reactivas al cursor y síntesis de voz.",
+        "desc": "Entorno antiestrés con partículas reactivas al cursor y síntesis auditiva.",
         "uso": "Pausas activas y reducción de la fatiga en pantalla.",
-        "color": DOMINIOS["Interacción y Creatividad"]["color"]
+        "color": "#6366f1"
     },
     {
         "id": 8,
@@ -126,9 +104,9 @@ CATALOGO = [
         "url": "https://sentimentz.streamlit.app",
         "icon": "🤖",
         "svg_type": "text",
-        "desc": "Diálogo interactivo con detección de tono anímico y retroalimentación serena.",
-        "uso": "Bitácoras personales y redacción asistida bajo estrés.",
-        "color": DOMINIOS["Interacción y Creatividad"]["color"]
+        "desc": "Diálogo asistido con análisis del estado afectivo y respuestas adaptativas.",
+        "uso": "Bitácoras personales y redacción formal bajo presión.",
+        "color": "#6366f1"
     },
     {
         "id": 9,
@@ -138,8 +116,8 @@ CATALOGO = [
         "icon": "🪞",
         "svg_type": "vision",
         "desc": "Extracción óptica de texto y proyección interactiva sobre plano tridimensional.",
-        "uso": "Traducción y lectura de señalética o menús físicos.",
-        "color": DOMINIOS["Visión y Óptica"]["color"]
+        "uso": "Lectura asistida de señalética física en lenguas extranjeras.",
+        "color": "#38bdf8"
     },
     {
         "id": 10,
@@ -148,9 +126,9 @@ CATALOGO = [
         "url": "https://lectorz.streamlit.app",
         "icon": "📷",
         "svg_type": "vision",
-        "desc": "Conversión inmediata de capturas de cámara web en texto editable.",
-        "uso": "Transcripción ágil de citas y archivo de facturas impresas.",
-        "color": DOMINIOS["Visión y Óptica"]["color"]
+        "desc": "Conversión inmediata de capturas de cámara web en fragmentos de texto editables.",
+        "uso": "Transcripción ágil de citas y registro de recibos impresos.",
+        "color": "#38bdf8"
     },
     {
         "id": 11,
@@ -159,9 +137,9 @@ CATALOGO = [
         "url": "https://sussusamogus.streamlit.app",
         "icon": "✦",
         "svg_type": "audio",
-        "desc": "Señalización mediante pulsos de luz, tonos audibles y vibración física.",
-        "uso": "Sistemas de advertencia para cabinas y accesibilidad sensorial.",
-        "color": DOMINIOS["Voz y Acústica"]["color"]
+        "desc": "Señalización multisensorial con pulsos de luz, tonos audibles y vibración háptica.",
+        "uso": "Cabinas de advertencia industrial y accesibilidad táctil.",
+        "color": "#c084fc"
     },
     {
         "id": 12,
@@ -170,9 +148,9 @@ CATALOGO = [
         "url": "https://drawrecogz.streamlit.app",
         "icon": "🎨",
         "svg_type": "creative",
-        "desc": "Lienzo de dibujo digital con interpretación visual automática de formas.",
-        "uso": "Conceptualización gráfica y lluvia de ideas tempranas.",
-        "color": DOMINIOS["Interacción y Creatividad"]["color"]
+        "desc": "Pizarra de dibujo digital con interpretación visual de esquemas geométricos.",
+        "uso": "Conceptualización de diagramas y prototipado temprano.",
+        "color": "#6366f1"
     },
     {
         "id": 13,
@@ -181,9 +159,9 @@ CATALOGO = [
         "url": "https://chatpdfz.streamlit.app",
         "icon": "💬",
         "svg_type": "text",
-        "desc": "Resolución de preguntas basándose estrictamente en el contenido de un archivo PDF.",
-        "uso": "Auditoría de contratos y estudio de manuales de ingeniería.",
-        "color": DOMINIOS["Lenguaje y RAG"]["color"]
+        "desc": "Resolución de consultas precisas sustentadas en el contenido de un archivo PDF.",
+        "uso": "Auditoría de contratos extensos y manuales de ingeniería.",
+        "color": "#818cf8"
     },
     {
         "id": 14,
@@ -193,8 +171,8 @@ CATALOGO = [
         "icon": "⚖️",
         "svg_type": "text",
         "desc": "Diagnóstico de neutralidad, carga subjetiva y polaridad emocional de mensajes.",
-        "uso": "Revisión formal de comunicaciones corporativas.",
-        "color": DOMINIOS["Lenguaje y RAG"]["color"]
+        "uso": "Revisión formal de comunicaciones corporativas delicadas.",
+        "color": "#818cf8"
     },
     {
         "id": 15,
@@ -205,7 +183,7 @@ CATALOGO = [
         "svg_type": "neural",
         "desc": "Deducción de ecuaciones de equilibrio estático a partir de esquemas de fuerzas.",
         "uso": "Validación conceptual de mecanismos simples y palancas.",
-        "color": DOMINIOS["Redes y Modelado"]["color"]
+        "color": "#8b5cf6"
     },
     {
         "id": 16,
@@ -216,7 +194,7 @@ CATALOGO = [
         "svg_type": "creative",
         "desc": "Generación de historias estructuradas a partir de personajes dibujados a mano.",
         "uso": "Fomento de la lectura y dinámicas escolares creativas.",
-        "color": DOMINIOS["Interacción y Creatividad"]["color"]
+        "color": "#6366f1"
     },
     {
         "id": 17,
@@ -227,7 +205,7 @@ CATALOGO = [
         "svg_type": "iot",
         "desc": "Monitoreo en tiempo real de temperatura, humedad y presión con gemelo Wokwi.",
         "uso": "Supervisión ambiental y control de salas de servidores.",
-        "color": DOMINIOS["IoT y Ciberfísica"]["color"]
+        "color": "#22d3ee"
     },
     {
         "id": 18,
@@ -236,9 +214,9 @@ CATALOGO = [
         "url": "https://sendcmqttz.streamlit.app",
         "icon": "⚡",
         "svg_type": "iot",
-        "desc": "Mando remoto para activación de matrices LED y servomotores angulares.",
+        "desc": "Mando remoto para activación de matrices LED y posicionamiento angular de servos.",
         "uso": "Automatización distribuida y control de compuertas.",
-        "color": DOMINIOS["Actuación y Hardware"]["color"]
+        "color": "#3b82f6"
     },
     {
         "id": 19,
@@ -248,15 +226,15 @@ CATALOGO = [
         "icon": "🎙️",
         "svg_type": "audio",
         "desc": "Operación manos libres de hardware mediante locuciones en lenguaje natural.",
-        "uso": "Comando seguro en cabinas industriales y accesibilidad.",
-        "color": DOMINIOS["Voz y Acústica"]["color"]
+        "uso": "Comando en cabinas industriales y entornos asistivos.",
+        "color": "#c084fc"
     }
 ]
 
-APP_MAP = {app["id"]: app for app in CATALOGO}
+APPS_JSON = json.dumps(CATALOGO)
 
 # ==============================================================================
-# 5. ESTILOS CSS REFINADOS
+# 3. ESTILOS BASE Y AMBIENTACIÓN CÓSMICA
 # ==============================================================================
 render_clean_html("""
 <style>
@@ -271,15 +249,15 @@ html, body, [data-testid="stAppViewContainer"], .stApp {
 }
 
 body {
-    background-color: #050811 !important;
+    background-color: #04060d !important;
 }
 
 [data-testid="stHeader"] { background: transparent !important; }
 [data-testid="stSidebar"], section[data-testid="stSidebar"] { display: none !important; }
 
 .block-container {
-    max-width: 1300px !important;
-    padding-top: 1rem !important;
+    max-width: 1360px !important;
+    padding-top: 0.8rem !important;
     padding-bottom: 2rem !important;
     margin: 0 auto !important;
 }
@@ -292,129 +270,37 @@ body {
 .brand-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.72rem;
-    letter-spacing: 0.24em;
+    letter-spacing: 0.28em;
     color: #cbd5e1;
     text-transform: uppercase;
 }
 
 .hero-title {
-    font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+    font-size: clamp(1.8rem, 3.2vw, 2.7rem);
     font-weight: 700;
     color: #ffffff;
     line-height: 1.2;
     margin: 0.2rem 0;
     letter-spacing: -0.02em;
+    text-shadow: 0 0 25px rgba(56, 189, 248, 0.35);
 }
 
 .hero-sub {
     color: #94a3b8;
-    font-size: 0.9rem;
-    max-width: 660px;
+    font-size: 0.92rem;
+    max-width: 680px;
     margin: 0 auto;
-}
-
-/* Barra de Auditoría Compacta */
-.audit-bar {
-    background: rgba(10, 16, 32, 0.95);
-    border: 1px solid rgba(203, 213, 225, 0.16);
-    border-radius: 20px;
-    padding: 8px 18px;
-    margin-bottom: 1.2rem;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
-}
-
-.progress-track {
-    width: 100%;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 6px;
-    overflow: hidden;
-    margin-top: 6px;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #1d4ed8, #3b82f6, #38bdf8, #818cf8);
-    border-radius: 6px;
-    transition: width 0.3s ease;
-}
-
-/* Tarjeta del Inspector */
-.inspector-card {
-    background: linear-gradient(145deg, rgba(12, 18, 38, 0.98) 0%, rgba(7, 10, 22, 0.98) 100%);
-    border: 1px solid rgba(203, 213, 225, 0.18);
-    border-radius: 12px;
-    padding: 22px;
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7);
-    margin-bottom: 0.8rem;
-}
-
-.chip-tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    font-weight: 600;
-    border-radius: 6px;
-    padding: 3px 9px;
-    display: inline-block;
-}
-
-/* Estilo del Paternoster Track */
-div[data-testid="stVerticalBlockBorderWrapper"] {
-    background: rgba(8, 14, 28, 0.85) !important;
-    border: 1px solid rgba(203, 213, 225, 0.15) !important;
-    border-radius: 10px !important;
-    padding: 10px !important;
-}
-
-/* Botones Nativos */
-div.stButton > button {
-    border-radius: 6px !important;
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: 0.82rem !important;
-    font-weight: 600 !important;
-    background: rgba(14, 20, 38, 0.95) !important;
-    color: #e2e8f0 !important;
-    border: 1px solid rgba(203, 213, 225, 0.22) !important;
-    padding: 0.5rem 0.9rem !important;
-    transition: all 0.2s ease !important;
-}
-
-div.stButton > button:hover {
-    border-color: #38bdf8 !important;
-    color: #ffffff !important;
-}
-
-div[data-testid="stLinkButton"] > a {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 100% !important;
-    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 45%, #7c3aed 100%) !important;
-    color: #ffffff !important;
-    font-family: 'JetBrains Mono', monospace !important;
-    font-weight: 600 !important;
-    font-size: 0.88rem !important;
-    border-radius: 6px !important;
-    padding: 0.68rem 1.2rem !important;
-    text-decoration: none !important;
-    box-shadow: 0 0 16px rgba(37, 99, 235, 0.45) !important;
-    border: 1px solid rgba(226, 232, 240, 0.25) !important;
-}
-
-div[data-testid="stLinkButton"] > a:hover {
-    box-shadow: 0 0 25px rgba(56, 189, 248, 0.6) !important;
 }
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
     gap: 14px;
-    margin-top: 10px;
+    margin-top: 14px;
 }
 
 .grid-card {
-    background: rgba(10, 16, 32, 0.95);
+    background: rgba(8, 14, 28, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-top: 3px solid #38bdf8;
     border-radius: 8px;
@@ -422,7 +308,13 @@ div[data-testid="stLinkButton"] > a:hover {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.grid-card:hover {
+    transform: translateY(-2px);
+    border-color: #38bdf8;
 }
 
 .grid-link {
@@ -441,7 +333,7 @@ div[data-testid="stLinkButton"] > a:hover {
 """)
 
 # ==============================================================================
-# 6. CANVAS GPU LIGERO (PARTÍCULAS SIN IMPACTO EN RENDIMIENTO)
+# 4. CANVAS GPU DE ALTA EFICIENCIA (FONDO PLASMA NEÓN)
 # ==============================================================================
 components.html(
     """
@@ -456,7 +348,7 @@ components.html(
         if (!canvas) {
             canvas = pDoc.createElement('canvas');
             canvas.id = 'galaxy-blue-canvas';
-            canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;background:#050811;';
+            canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;background:#04060d;';
             pDoc.body.prepend(canvas);
         }
 
@@ -471,9 +363,9 @@ components.html(
         });
 
         const orbs = [
-            { x: w * 0.15, y: h * 0.25, r: 180 * scale, vx: 0.4, vy: 0.3, color: 'rgba(37, 99, 235, 0.2)' },
-            { x: w * 0.85, y: h * 0.35, r: 200 * scale, vx: -0.3, vy: 0.4, color: 'rgba(56, 189, 248, 0.18)' },
-            { x: w * 0.5,  y: h * 0.85, r: 170 * scale, vx: 0.3, vy: -0.4, color: 'rgba(124, 58, 237, 0.16)' }
+            { x: w * 0.15, y: h * 0.25, r: 190 * scale, vx: 0.35, vy: 0.25, color: 'rgba(37, 99, 235, 0.25)' },
+            { x: w * 0.85, y: h * 0.35, r: 210 * scale, vx: -0.3, vy: 0.35, color: 'rgba(56, 189, 248, 0.22)' },
+            { x: w * 0.5,  y: h * 0.85, r: 180 * scale, vx: 0.25, vy: -0.3, color: 'rgba(124, 58, 237, 0.20)' }
         ];
 
         const pColors = ['#38bdf8', '#818cf8', '#c084fc', '#93c5fd', '#cbd5e1'];
@@ -483,7 +375,7 @@ components.html(
             particles.push({
                 x: Math.random() * w,
                 y: Math.random() * h,
-                r: Math.random() * 1.4 + 0.6,
+                r: Math.random() * 1.5 + 0.6,
                 vx: (Math.random() - 0.5) * 0.4,
                 vy: (Math.random() - 0.5) * 0.4,
                 color: pColors[i % pColors.length]
@@ -491,19 +383,19 @@ components.html(
         }
 
         function loop() {
-            ctx.fillStyle = '#050811';
+            ctx.fillStyle = '#04060d';
             ctx.fillRect(0, 0, w, h);
 
             ctx.globalCompositeOperation = 'screen';
             for (let b of orbs) {
                 b.x += b.vx;
                 b.y += b.vy;
-                if (b.x < -30 || b.x > w + 30) b.vx *= -1;
-                if (b.y < -30 || b.y > h + 30) b.vy *= -1;
+                if (b.x < -40 || b.x > w + 40) b.vx *= -1;
+                if (b.y < -40 || b.y > h + 40) b.vy *= -1;
 
                 const g = ctx.createRadialGradient(b.x, b.y, 2, b.x, b.y, b.r);
                 g.addColorStop(0, b.color);
-                g.addColorStop(1, 'rgba(5, 8, 17, 0)');
+                g.addColorStop(1, 'rgba(4, 6, 13, 0)');
                 ctx.beginPath();
                 ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
                 ctx.fillStyle = g;
@@ -538,271 +430,611 @@ components.html(
 )
 
 # ==============================================================================
-# 7. GENERADORES HUD COMPACTOS
+# 5. ENCABEZADO Y AUDITORÍA MAESTRA
 # ==============================================================================
-def generar_svg_hud(tipo: str, color_hex: str):
-    if tipo == "iot":
-        return f"""
-        <div style="background:rgba(8,14,30,0.96); border:1px solid {color_hex}55; border-radius:10px; padding:12px; text-align:center;">
-            <div style="font-family:'JetBrains Mono'; font-size:0.68rem; color:{color_hex}; letter-spacing:0.12em; margin-bottom:4px;">NODO TELEMÉTRICO</div>
-            <svg width="200" height="140" viewBox="0 0 200 140">
-                <circle cx="100" cy="70" r="50" fill="none" stroke="rgba(203,213,225,0.15)" stroke-width="1" stroke-dasharray="4 4"/>
-                <circle cx="100" cy="70" r="32" fill="none" stroke="{color_hex}" stroke-width="1.2" opacity="0.4"/>
-                <circle cx="100" cy="70" r="16" fill="none" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="6 4"/>
-                <circle cx="100" cy="70" r="5" fill="#38bdf8"/>
-                <text x="100" y="132" font-family="'JetBrains Mono'" font-size="8.5" fill="#cbd5e1" text-anchor="middle">MQTT ACTIVO</text>
-            </svg>
-        </div>
-        """
-    elif tipo == "vision":
-        return f"""
-        <div style="background:rgba(8,14,30,0.96); border:1px solid {color_hex}55; border-radius:10px; padding:12px; text-align:center;">
-            <div style="font-family:'JetBrains Mono'; font-size:0.68rem; color:{color_hex}; letter-spacing:0.12em; margin-bottom:4px;">CANAL ÓPTICO</div>
-            <svg width="200" height="140" viewBox="0 0 200 140">
-                <rect x="15" y="10" width="170" height="115" fill="none" stroke="rgba(203,213,225,0.15)" stroke-width="1" rx="6"/>
-                <circle cx="100" cy="68" r="42" fill="none" stroke="{color_hex}" stroke-width="1.2" stroke-dasharray="8 5" opacity="0.6"/>
-                <rect x="68" y="38" width="64" height="60" fill="none" stroke="{color_hex}" stroke-width="1.2"/>
-                <text x="100" y="72" font-family="'JetBrains Mono'" font-size="8.5" fill="#f1f5f9" text-anchor="middle">DETECCIÓN</text>
-            </svg>
-        </div>
-        """
-    elif tipo == "audio":
-        return f"""
-        <div style="background:rgba(8,14,30,0.96); border:1px solid {color_hex}55; border-radius:10px; padding:12px; text-align:center;">
-            <div style="font-family:'JetBrains Mono'; font-size:0.68rem; color:{color_hex}; letter-spacing:0.12em; margin-bottom:4px;">FRECUENCIA AUDIBLE</div>
-            <svg width="200" height="140" viewBox="0 0 200 140">
-                <circle cx="100" cy="66" r="38" fill="none" stroke="#cbd5e1" stroke-width="1" opacity="0.3"/>
-                <g transform="translate(62, 66)">
-                    <rect x="0" y="-20" width="6" height="40" rx="2" fill="{color_hex}"/>
-                    <rect x="14" y="-30" width="6" height="60" rx="2" fill="#38bdf8"/>
-                    <rect x="28" y="-38" width="6" height="76" rx="2" fill="{color_hex}"/>
-                    <rect x="42" y="-26" width="6" height="52" rx="2" fill="#c084fc"/>
-                    <rect x="56" y="-16" width="6" height="32" rx="2" fill="#cbd5e1"/>
-                </g>
-                <text x="100" y="130" font-family="'JetBrains Mono'" font-size="8.5" fill="#cbd5e1" text-anchor="middle">SÍNTESIS</text>
-            </svg>
-        </div>
-        """
-    elif tipo == "neural":
-        return f"""
-        <div style="background:rgba(8,14,30,0.96); border:1px solid {color_hex}55; border-radius:10px; padding:12px; text-align:center;">
-            <div style="font-family:'JetBrains Mono'; font-size:0.68rem; color:{color_hex}; letter-spacing:0.12em; margin-bottom:4px;">INFERENCIA NEURONAL</div>
-            <svg width="200" height="140" viewBox="0 0 200 140">
-                <circle cx="100" cy="68" r="46" fill="none" stroke="rgba(203,213,225,0.15)" stroke-width="1" stroke-dasharray="8 6"/>
-                <line x1="45" y1="42" x2="100" y2="55" stroke="{color_hex}" stroke-width="1.2"/>
-                <line x1="45" y1="94" x2="100" y2="81" stroke="{color_hex}" stroke-width="1.2"/>
-                <line x1="100" y1="55" x2="155" y2="68" stroke="#38bdf8" stroke-width="1.2"/>
-                <line x1="100" y1="81" x2="155" y2="68" stroke="#38bdf8" stroke-width="1.2"/>
-                <circle cx="45" cy="42" r="5" fill="#050811" stroke="{color_hex}" stroke-width="1.5"/>
-                <circle cx="45" cy="94" r="5" fill="#050811" stroke="{color_hex}" stroke-width="1.5"/>
-                <circle cx="100" cy="55" r="6" fill="#050811" stroke="#38bdf8" stroke-width="1.5"/>
-                <circle cx="100" cy="81" r="6" fill="#050811" stroke="#38bdf8" stroke-width="1.5"/>
-                <circle cx="155" cy="68" r="7" fill="#050811" stroke="#cbd5e1" stroke-width="2"/>
-                <text x="100" y="132" font-family="'JetBrains Mono'" font-size="8.5" fill="#cbd5e1" text-anchor="middle">CLASIFICACIÓN</text>
-            </svg>
-        </div>
-        """
-    else:
-        return f"""
-        <div style="background:rgba(8,14,30,0.96); border:1px solid {color_hex}55; border-radius:10px; padding:12px; text-align:center;">
-            <div style="font-family:'JetBrains Mono'; font-size:0.68rem; color:{color_hex}; letter-spacing:0.12em; margin-bottom:4px;">MODELADO SEMÁNTICO</div>
-            <svg width="200" height="140" viewBox="0 0 200 140">
-                <path d="M 25 38 Q 65 15, 100 52 T 175 38" fill="none" stroke="{color_hex}" stroke-width="1.5"/>
-                <path d="M 25 68 Q 65 96, 100 68 T 175 68" fill="none" stroke="#cbd5e1" stroke-width="1.5"/>
-                <circle cx="50" cy="28" r="4" fill="#38bdf8"/>
-                <circle cx="100" cy="68" r="6" fill="{color_hex}"/>
-                <circle cx="150" cy="38" r="4" fill="#cbd5e1"/>
-                <text x="100" y="130" font-family="'JetBrains Mono'" font-size="8.5" fill="#cbd5e1" text-anchor="middle">RECUPERACIÓN</text>
-            </svg>
-        </div>
-        """
-
-# ==============================================================================
-# 8. ENCABEZADO Y AUDITORÍA
-# ==============================================================================
-total_apps = len(CATALOGO)
-visitadas_count = len(st.session_state.visited_apps)
-progreso_pct = int((visitadas_count / total_apps) * 100)
-
-render_clean_html(f"""
+render_clean_html("""
 <div class="header-deck">
     <div class="brand-label">Portafolio de Sistemas</div>
     <div class="hero-title">Interfaces Multimodales</div>
-    <div class="hero-sub">Colección de 19 aplicaciones en visión artificial, modelos de lenguaje, IoT y acústica.</div>
-</div>
-
-<div class="audit-bar">
-    <div style="display:flex; justify-content:space-between; align-items:center; font-family:'JetBrains Mono'; font-size:0.75rem;">
-        <span style="color:#cbd5e1;">PROGRESO DE AUDITORÍA</span>
-        <span style="color:#38bdf8; font-weight:600;">{visitadas_count} de {total_apps} revisadas ({progreso_pct}%)</span>
-    </div>
-    <div class="progress-track">
-        <div class="progress-fill" style="width: {max(4, progreso_pct)}%;"></div>
-    </div>
+    <div class="hero-sub">19 aplicaciones de visión artificial, modelos de lenguaje, telemetría IoT y acústica.</div>
 </div>
 """)
 
-# ==============================================================================
-# 9. NAVEGACIÓN PRINCIPAL
-# ==============================================================================
-tab_estacion, tab_matriz = st.tabs(["Estación de Inspección", "Directorio Completo"])
+tab_estacion, tab_matriz = st.tabs(["Estación de Inspección Paternoster", "Directorio Completo"])
 
 # ==============================================================================
-# PESTAÑA 1: ESTANTE PATERNOSTER + WORKSTATION LATERAL
+# PESTAÑA 1: PATERNOSTER DRAGGABLE SHELF + WORKSTATION LATERAL
 # ==============================================================================
 with tab_estacion:
-    c_dom, c_busq = st.columns([1, 1.4], gap="medium")
-    with c_dom:
-        categorias = ["Todos los dominios"] + list(DOMINIOS.keys())
-        cat_filtro = st.selectbox("Dominio:", categorias, label_visibility="collapsed")
-    with c_busq:
-        busqueda = st.text_input("Filtrar:", placeholder="Buscar por palabra clave...", label_visibility="collapsed")
+    # Componente integrado de alta reactividad con física de arrastre y eyección de botón
+    components.html(
+        f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <meta charset="utf-8">
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+            * {{ box-sizing: border-box; margin: 0; padding: 0; user-select: none; }}
+            html, body {{
+                background: transparent;
+                color: #e2e8f0;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+            }}
 
-    apps_visibles = [
-        app for app in CATALOGO
-        if (cat_filtro == "Todos los dominios" or app["cat"] == cat_filtro)
-        and (
-            not busqueda
-            or busqueda.lower() in app["titulo"].lower()
-            or busqueda.lower() in app["desc"].lower()
-            or busqueda.lower() in app["uso"].lower()
-        )
-    ]
+            .deck-wrapper {{
+                display: flex;
+                gap: 24px;
+                width: 100%;
+                height: 620px;
+                padding: 6px;
+            }}
 
-    if not apps_visibles:
-        st.info("Sin coincidencias.")
-        apps_visibles = CATALOGO
+            /* --- ESTANTE PATERNOSTER ENSANCHADO --- */
+            .paternoster-container {{
+                flex: 1.35;
+                position: relative;
+                background: linear-gradient(145deg, rgba(9, 14, 28, 0.95) 0%, rgba(5, 8, 18, 0.98) 100%);
+                border: 1px solid rgba(56, 189, 248, 0.22);
+                border-radius: 14px;
+                padding: 16px;
+                display: flex;
+                flex-direction: column;
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
+                overflow: hidden;
+            }}
 
-    ids_visibles = [a["id"] for a in apps_visibles]
-    if st.session_state.selected_id not in ids_visibles:
-        st.session_state.selected_id = ids_visibles[0]
+            .paternoster-header {{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.74rem;
+            }}
 
-    idx_actual = ids_visibles.index(st.session_state.selected_id)
-    app_actual = APP_MAP[st.session_state.selected_id]
-    esta_revisada = app_actual["id"] in st.session_state.visited_apps
+            .paternoster-viewport {{
+                flex: 1;
+                position: relative;
+                overflow: hidden;
+                cursor: grab;
+                touch-action: none;
+            }}
 
-    # Disposición Master-Detail: Estante Paternoster a la izquierda, Workstation a la derecha
-    col_paternoster, col_workstation = st.columns([1, 1.25], gap="large")
+            .paternoster-viewport:active {{
+                cursor: grabbing;
+            }}
 
-    # --------------------------------------------------------------------------
-    # ESTANTE PATERNOSTER (CONTENIDO CON ALTURA FIJA // SIN DESPLAZAR PÁGINA)
-    # --------------------------------------------------------------------------
-    with col_paternoster:
-        # Barra de control del carrusel giratorio
-        c_prev, c_pos, c_next = st.columns([1.1, 1.4, 1.1])
-        with c_prev:
-            if st.button("▲ Anterior", use_container_width=True):
-                nuevo_idx = (idx_actual - 1) % len(ids_visibles)
-                st.session_state.selected_id = ids_visibles[nuevo_idx]
-                st.rerun()
-        with c_pos:
-            st.markdown(f"""
-            <div style="text-align:center; padding-top:6px; font-family:'JetBrains Mono'; font-size:0.75rem; color:#cbd5e1;">
-                Ítem <b style="color:#38bdf8;">{idx_actual + 1:02d}</b> / {len(ids_visibles):02d}
-            </div>
-            """, unsafe_allow_html=True)
-        with c_next:
-            if st.button("Siguiente ▼", use_container_width=True):
-                nuevo_idx = (idx_actual + 1) % len(ids_visibles)
-                st.session_state.selected_id = ids_visibles[nuevo_idx]
-                st.rerun()
+            .paternoster-aperture {{
+                position: absolute;
+                top: 50%;
+                left: 0;
+                right: 0;
+                height: 96px;
+                transform: translateY(-50%);
+                border: 1px solid rgba(56, 189, 248, 0.45);
+                border-left: 4px solid #38bdf8;
+                border-radius: 10px;
+                pointer-events: none;
+                box-shadow: 0 0 25px rgba(56, 189, 248, 0.2), inset 0 0 15px rgba(56, 189, 248, 0.1);
+                z-index: 2;
+            }}
 
-        # Contenedor deslizante de altura fija (500px) con scroll interno fluido
-        with st.container(height=490):
-            for item in apps_visibles:
-                es_activa = item["id"] == st.session_state.selected_id
-                check_icon = "✓" if item["id"] in st.session_state.visited_apps else "○"
-                borde = f"2px solid {item['color']}" if es_activa else "1px solid rgba(255,255,255,0.08)"
-                fondo = "rgba(16, 24, 48, 0.98)" if es_activa else "rgba(9, 14, 28, 0.85)"
-                color_txt = "#ffffff" if es_activa else "#cbd5e1"
+            .paternoster-track {{
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                will-change: transform;
+            }}
 
-                c_card, c_act = st.columns([3.6, 1])
-                with c_card:
-                    render_clean_html(f"""
-                    <div style="background:{fondo}; border:{borde}; border-radius:8px; padding:10px 12px; margin-bottom:6px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span style="font-weight:600; font-size:0.88rem; color:{color_txt};">{item['icon']} {item['titulo']}</span>
-                            <span style="font-family:'JetBrains Mono'; font-size:0.72rem; color:{item['color']};">{check_icon}</span>
-                        </div>
-                        <div style="font-size:0.78rem; color:#94a3b8; margin-top:2px;">{item['desc']}</div>
-                    </div>
-                    """)
-                with c_act:
-                    st.write("")
-                    btn_label = "● Ver" if es_activa else "Ver"
-                    if st.button(btn_label, key=f"pater_{item['id']}", use_container_width=True):
-                        st.session_state.selected_id = item["id"]
-                        st.rerun()
+            .shelf-card {{
+                position: relative;
+                height: 86px;
+                margin-bottom: 10px;
+                background: rgba(12, 19, 38, 0.88);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 8px;
+                padding: 12px 16px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                transition: opacity 0.15s ease, transform 0.15s ease, filter 0.15s ease;
+                transform-origin: center center;
+            }}
 
-    # --------------------------------------------------------------------------
-    # ESTACIÓN DE TRABAJO (WORKSTATION LATERAL)
-    # --------------------------------------------------------------------------
-    with col_workstation:
-        badge_status = (
-            '<span style="color:#2dd4bf; background:rgba(45,212,191,0.12); border:1px solid rgba(45,212,191,0.3); border-radius:6px; padding:3px 8px; font-family:\'JetBrains Mono\'; font-size:0.72rem;">✓ Verificada</span>'
-            if esta_revisada
-            else '<span style="color:#94a3b8; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); border-radius:6px; padding:3px 8px; font-family:\'JetBrains Mono\'; font-size:0.72rem;">○ Pendiente</span>'
-        )
+            .shelf-card-info {{
+                flex: 1;
+                padding-right: 12px;
+            }}
 
-        # Ficha concisa con HTML purgado para evitar fugas de código
-        render_clean_html(f"""
-        <div class="inspector-card" style="border-top: 3px solid {app_actual['color']};">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <div>
-                    <span class="chip-tag" style="background:{app_actual['color']}20; color:{app_actual['color']}; border:1px solid {app_actual['color']}55;">
-                        {app_actual['icon']} {app_actual['cat']}
-                    </span>
-                    <span style="font-family:'JetBrains Mono'; font-size:0.75rem; color:#cbd5e1; margin-left:8px;">
-                        #{app_actual['id']:02d} / {total_apps:02d}
-                    </span>
+            .shelf-card-title {{
+                font-weight: 700;
+                font-size: 0.95rem;
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }}
+
+            .shelf-card-desc {{
+                font-size: 0.8rem;
+                color: #94a3b8;
+                margin-top: 3px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }}
+
+            /* --- BOTÓN «VER» EYECTADO LATERALMENTE --- */
+            .ejected-btn {{
+                position: absolute;
+                right: -6px;
+                top: 50%;
+                transform: translateY(-50%) translateX(25px);
+                opacity: 0;
+                pointer-events: none;
+                background: linear-gradient(135deg, #0284c7 0%, #2563eb 60%, #7c3aed 100%);
+                color: #ffffff;
+                border: 1px solid rgba(56, 189, 248, 0.7);
+                border-radius: 6px;
+                padding: 10px 18px;
+                font-family: 'JetBrains Mono', monospace;
+                font-weight: 700;
+                font-size: 0.78rem;
+                letter-spacing: 0.08em;
+                cursor: pointer;
+                box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
+                transition: transform 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s ease;
+                z-index: 10;
+            }}
+
+            .ejected-btn.visible {{
+                transform: translateY(-50%) translateX(0);
+                opacity: 1;
+                pointer-events: auto;
+            }}
+
+            .ejected-btn:hover {{
+                box-shadow: 0 0 30px rgba(56, 189, 248, 0.9);
+                filter: brightness(1.15);
+            }}
+
+            /* --- ESTACIÓN DE INSPECCIÓN LATERAL (WORKSTATION) --- */
+            .workstation-container {{
+                flex: 1.05;
+                background: linear-gradient(145deg, rgba(12, 18, 38, 0.98) 0%, rgba(6, 10, 22, 0.98) 100%);
+                border: 1px solid rgba(56, 189, 248, 0.28);
+                border-top: 3px solid #38bdf8;
+                border-radius: 14px;
+                padding: 24px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.75);
+                position: relative;
+            }}
+
+            .workstation-top {{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+            }}
+
+            .chip-cat {{
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.72rem;
+                padding: 4px 10px;
+                border-radius: 6px;
+                font-weight: 600;
+                text-transform: uppercase;
+                background: rgba(56, 189, 248, 0.15);
+                border: 1px solid rgba(56, 189, 248, 0.4);
+                color: #38bdf8;
+            }}
+
+            .workstation-title {{
+                font-size: 1.65rem;
+                font-weight: 700;
+                color: #ffffff;
+                margin: 4px 0 8px 0;
+            }}
+
+            .workstation-desc {{
+                font-size: 0.94rem;
+                color: #cbd5e1;
+                line-height: 1.5;
+                margin-bottom: 12px;
+            }}
+
+            .workstation-box {{
+                background: rgba(56, 189, 248, 0.06);
+                border-left: 3px solid #38bdf8;
+                border-radius: 6px;
+                padding: 10px 14px;
+                margin-bottom: 14px;
+            }}
+
+            .workstation-box-lbl {{
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.68rem;
+                color: #38bdf8;
+                text-transform: uppercase;
+                font-weight: 700;
+                margin-bottom: 2px;
+            }}
+
+            .workstation-hud {{
+                background: rgba(5, 9, 20, 0.95);
+                border: 1px solid rgba(56, 189, 248, 0.25);
+                border-radius: 10px;
+                padding: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 16px;
+                box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+            }}
+
+            .action-deck {{
+                display: flex;
+                gap: 12px;
+            }}
+
+            .btn-primary {{
+                flex: 1.6;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 45%, #7c3aed 100%);
+                color: #ffffff;
+                text-decoration: none;
+                font-family: 'JetBrains Mono', monospace;
+                font-weight: 700;
+                font-size: 0.88rem;
+                border-radius: 6px;
+                padding: 12px;
+                box-shadow: 0 0 20px rgba(37, 99, 235, 0.5);
+                border: 1px solid rgba(226, 232, 240, 0.25);
+                transition: all 0.2s ease;
+            }}
+
+            .btn-primary:hover {{
+                box-shadow: 0 0 30px rgba(56, 189, 248, 0.7);
+                transform: translateY(-1px);
+            }}
+
+            .btn-verify {{
+                flex: 1.1;
+                background: rgba(14, 20, 38, 0.95);
+                color: #e2e8f0;
+                border: 1px solid rgba(203, 213, 225, 0.25);
+                border-radius: 6px;
+                padding: 12px;
+                font-family: 'JetBrains Mono', monospace;
+                font-weight: 600;
+                font-size: 0.8rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }}
+
+            .btn-verify:hover {{
+                border-color: #38bdf8;
+                color: #ffffff;
+            }}
+
+            .btn-verify.checked {{
+                background: rgba(45, 212, 191, 0.15);
+                border-color: #2dd4bf;
+                color: #2dd4bf;
+            }}
+        </style>
+        </head>
+        <body>
+
+        <div class="deck-wrapper">
+            <!-- ESTANTE PATERNOSTER -->
+            <div class="paternoster-container">
+                <div class="paternoster-header">
+                    <span style="color:#cbd5e1;">ESTANTE PATERNOSTER // ENLACE CINEMÁTICO</span>
+                    <span id="paternoster-status" style="color:#38bdf8;">ARRASTRE O GIRO ↕</span>
                 </div>
-                <div>{badge_status}</div>
+                
+                <div class="paternoster-viewport" id="viewport">
+                    <div class="paternoster-aperture"></div>
+                    <div class="paternoster-track" id="track"></div>
+                </div>
             </div>
-            <div style="font-size:1.55rem; font-weight:700; color:#ffffff; margin-bottom:6px;">{app_actual['titulo']}</div>
-            <div style="font-size:0.92rem; color:#e2e8f0; line-height:1.55; margin-bottom:12px;">{app_actual['desc']}</div>
-            <div style="background:rgba(56,189,248,0.06); border-left:3px solid {app_actual['color']}; border-radius:6px; padding:10px 14px; margin-bottom:10px;">
-                <div style="font-family:'JetBrains Mono'; font-size:0.68rem; color:{app_actual['color']}; text-transform:uppercase; font-weight:600; margin-bottom:2px;">Uso Práctico</div>
-                <div style="font-size:0.86rem; color:#cbd5e1;">{app_actual['uso']}</div>
+
+            <!-- ESTACIÓN LATERAL -->
+            <div class="workstation-container" id="workstation">
+                <div>
+                    <div class="workstation-top">
+                        <span class="chip-cat" id="ws-cat">VISIÓN</span>
+                        <span style="font-family:'JetBrains Mono'; font-size:0.76rem; color:#cbd5e1;" id="ws-counter">#01 / 19</span>
+                    </div>
+                    <div class="workstation-title" id="ws-title">Detector de Objetos</div>
+                    <div class="workstation-desc" id="ws-desc">Encuadra y cuantifica 80 clases comunes de objetos en imágenes o video en vivo.</div>
+                    <div class="workstation-box" id="ws-box">
+                        <div class="workstation-box-lbl" id="ws-box-lbl">USO PRÁCTICO</div>
+                        <div style="font-size:0.88rem; color:#cbd5e1;" id="ws-uso">Control de aforo y logística de inventario.</div>
+                    </div>
+                </div>
+
+                <div class="workstation-hud" id="ws-hud"></div>
+
+                <div class="action-deck">
+                    <a href="#" target="_blank" class="btn-primary" id="ws-link">Abrir Aplicación ↗</a>
+                    <button class="btn-verify" id="ws-btn-verify" onclick="toggleVerification()">Marcar Verificada</button>
+                </div>
             </div>
         </div>
-        """)
 
-        # Visor HUD SVG dinámico
-        render_clean_html(generar_svg_hud(app_actual["svg_type"], app_actual["color"]))
+        <script>
+        const APPS = {APPS_JSON};
+        const CARD_HEIGHT = 96; // 86px + 10px margen
+        let currentY = 0;
+        let isDragging = false;
+        let startY = 0;
+        let startScrollY = 0;
+        let focusedIndex = 0;
+        let verifiedApps = new Set(JSON.parse(localStorage.getItem('krov_verified_apps') || '[]'));
 
-        st.write("")
-        
-        # Acciones principales
-        c_link, c_check = st.columns([1.6, 1.2], gap="small")
-        with c_link:
-            st.link_button("Abrir aplicación ↗", app_actual["url"], use_container_width=True)
-        with c_check:
-            lbl_btn = "✓ Desmarcar" if esta_revisada else "Marcar revisada"
-            if st.button(lbl_btn, use_container_width=True):
-                if esta_revisada:
-                    st.session_state.visited_apps.remove(app_actual["id"])
-                else:
-                    st.session_state.visited_apps.add(app_actual["id"])
-                st.rerun()
+        const track = document.getElementById('track');
+        const viewport = document.getElementById('viewport');
+        const vpHeight = viewport.clientHeight || 510;
+        const centerOffset = (vpHeight / 2) - (CARD_HEIGHT / 2);
+
+        // Construcción DOM de tarjetas en el estante
+        APPS.forEach((app, idx) => {{
+            const card = document.createElement('div');
+            card.className = 'shelf-card';
+            card.id = `card-${{idx}}`;
+
+            const info = document.createElement('div');
+            info.className = 'shelf-card-info';
+            info.innerHTML = `
+                <div class="shelf-card-title">
+                    <span>${{app.icon}}</span> <span>${{app.titulo}}</span>
+                </div>
+                <div class="shelf-card-desc">${{app.desc}}</div>
+            `;
+
+            const btnVer = document.createElement('button');
+            btnVer.className = 'ejected-btn';
+            btnVer.id = `btn-ver-${{idx}}`;
+            btnVer.innerHTML = 'Ver ➔';
+            btnVer.onclick = (e) => {{
+                e.stopPropagation();
+                snapToIndex(idx);
+            }};
+
+            card.appendChild(info);
+            card.appendChild(btnVer);
+            card.onclick = () => snapToIndex(idx);
+            track.appendChild(card);
+        }});
+
+        function updateCardsVisuals() {{
+            const cards = track.children;
+            let closestIdx = 0;
+            let closestDist = Infinity;
+
+            for (let i = 0; i < cards.length; i++) {{
+                const card = cards[i];
+                const cardCenter = (i * CARD_HEIGHT) + currentY + (CARD_HEIGHT / 2);
+                const viewportCenter = vpHeight / 2;
+                const dist = Math.abs(viewportCenter - cardCenter);
+                const normalizedDist = dist / (vpHeight / 2);
+
+                if (dist < closestDist) {{
+                    closestDist = dist;
+                    closestIdx = i;
+                }}
+
+                // Profundidad de campo: opacidad, escala y desenfoque relativos al foco
+                const opacity = Math.max(0.18, 1 - (normalizedDist * 0.78));
+                const scale = Math.max(0.86, 1 - (normalizedDist * 0.14));
+                const blur = Math.min(2.5, normalizedDist * 1.8);
+
+                card.style.opacity = opacity;
+                card.style.transform = `scale(${{scale}})`;
+                card.style.filter = `blur(${{blur}}px)`;
+
+                // Eyección lateral del botón de inspección
+                const btn = document.getElementById(`btn-ver-${{i}}`);
+                if (btn) {{
+                    if (dist < (CARD_HEIGHT / 2)) {{
+                        btn.classList.add('visible');
+                    }} else {{
+                        btn.classList.remove('visible');
+                    }}
+                }}
+            }}
+
+            if (closestIdx !== focusedIndex) {{
+                focusedIndex = closestIdx;
+                updateWorkstation(APPS[focusedIndex]);
+            }}
+        }}
+
+        function setTrackPosition(y) {{
+            const minY = -((APPS.length - 1) * CARD_HEIGHT) + centerOffset;
+            const maxY = centerOffset;
+            currentY = Math.max(minY, Math.min(maxY, y));
+            track.style.transform = `translateY(${{currentY}}px)`;
+            updateCardsVisuals();
+        }}
+
+        function snapToIndex(idx) {{
+            focusedIndex = Math.max(0, Math.min(APPS.length - 1, idx));
+            const targetY = -(focusedIndex * CARD_HEIGHT) + centerOffset;
+            setTrackPosition(targetY);
+        }}
+
+        // Gestores de arrastre continuo con ratón (Pointer Events)
+        viewport.addEventListener('pointerdown', (e) => {{
+            isDragging = true;
+            startY = e.clientY;
+            startScrollY = currentY;
+            viewport.setPointerCapture(e.pointerId);
+        }});
+
+        viewport.addEventListener('pointermove', (e) => {{
+            if (!isDragging) return;
+            const dy = e.clientY - startY;
+            setTrackPosition(startScrollY + dy);
+        }});
+
+        viewport.addEventListener('pointerup', (e) => {{
+            if (!isDragging) return;
+            isDragging = false;
+            viewport.releasePointerCapture(e.pointerId);
+            snapToIndex(focusedIndex);
+        }});
+
+        viewport.addEventListener('wheel', (e) => {{
+            e.preventDefault();
+            setTrackPosition(currentY - (e.deltaY * 0.7));
+            snapToIndex(focusedIndex);
+        }}, {{ passive: false }});
+
+        // Actualización reactiva de la estación de trabajo lateral
+        function updateWorkstation(app) {{
+            document.getElementById('ws-cat').innerText = app.cat.toUpperCase();
+            document.getElementById('ws-cat').style.color = app.color;
+            document.getElementById('ws-counter').innerText = `#${{String(app.id).padStart(2, '0')}} / 19`;
+            document.getElementById('ws-title').innerText = app.titulo;
+            document.getElementById('ws-desc').innerText = app.desc;
+            document.getElementById('ws-uso').innerText = app.uso;
+            document.getElementById('ws-link').href = app.url;
+
+            const ws = document.getElementById('workstation');
+            ws.style.borderTopColor = app.color;
+            document.getElementById('ws-box').style.borderLeftColor = app.color;
+            document.getElementById('ws-box-lbl').style.color = app.color;
+
+            const btnVerify = document.getElementById('ws-btn-verify');
+            if (verifiedApps.has(app.id)) {{
+                btnVerify.innerText = '✓ Verificada';
+                btnVerify.classList.add('checked');
+            }} else {{
+                btnVerify.innerText = 'Marcar Verificada';
+                btnVerify.classList.remove('checked');
+            }}
+
+            renderHUD(app.svg_type, app.color);
+        }}
+
+        function toggleVerification() {{
+            const currentApp = APPS[focusedIndex];
+            if (verifiedApps.has(currentApp.id)) {{
+                verifiedApps.delete(currentApp.id);
+            }} else {{
+                verifiedApps.add(currentApp.id);
+            }}
+            localStorage.setItem('krov_verified_apps', JSON.stringify(Array.from(verifiedApps)));
+            updateWorkstation(currentApp);
+        }}
+
+        // Generador de HUDs hiper-saturados
+        function renderHUD(type, color) {{
+            const hudContainer = document.getElementById('ws-hud');
+            if (type === 'iot') {{
+                hudContainer.innerHTML = `
+                    <svg width="220" height="145" viewBox="0 0 220 145">
+                        <style>
+                            .spin-r {{ transform-origin: 110px 72px; animation: rClock 10s linear infinite; }}
+                            .pulse-w {{ animation: pW 1.8s ease-in-out infinite alternate; }}
+                            @keyframes rClock {{ 0% {{ transform: rotate(0deg); }} 100% {{ transform: rotate(360deg); }} }}
+                            @keyframes pW {{ 0% {{ opacity: 0.3; r: 35px; }} 100% {{ opacity: 0.9; r: 52px; }} }}
+                        </style>
+                        <circle cx="110" cy="72" r="54" fill="none" stroke="rgba(203,213,225,0.15)" stroke-width="1" stroke-dasharray="4 4"/>
+                        <circle class="pulse-w" cx="110" cy="72" r="45" fill="none" stroke="${{color}}" stroke-width="1.4"/>
+                        <circle class="spin-r" cx="110" cy="72" r="28" fill="none" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="6 4"/>
+                        <circle cx="110" cy="72" r="6" fill="#38bdf8"/>
+                        <text x="110" y="138" font-family="'JetBrains Mono'" font-size="8.5" fill="#cbd5e1" text-anchor="middle">MQTT NODO ENLACE PERSISTENTE</text>
+                    </svg>
+                `;
+            }} else if (type === 'vision') {{
+                hudContainer.innerHTML = `
+                    <svg width="220" height="145" viewBox="0 0 220 145">
+                        <style>
+                            .sweep {{ animation: swY 2.4s ease-in-out infinite alternate; }}
+                            .rot-c {{ transform-origin: 110px 72px; animation: rClock 12s linear infinite; }}
+                            @keyframes swY {{ 0% {{ transform: translateY(18px); }} 100% {{ transform: translateY(124px); }} }}
+                        </style>
+                        <rect x="15" y="14" width="190" height="116" fill="none" stroke="rgba(203,213,225,0.18)" stroke-width="1" rx="6"/>
+                        <circle class="rot-c" cx="110" cy="72" r="42" fill="none" stroke="${{color}}" stroke-width="1.3" stroke-dasharray="8 5"/>
+                        <rect x="78" y="42" width="64" height="60" fill="none" stroke="${{color}}" stroke-width="1.2"/>
+                        <line class="sweep" x1="18" y1="0" x2="202" y2="0" stroke="${{color}}" stroke-width="1.6"/>
+                        <text x="110" y="76" font-family="'JetBrains Mono'" font-size="8.5" fill="#ffffff" text-anchor="middle">TRACKING ÓPTICO</text>
+                    </svg>
+                `;
+            }} else if (type === 'audio') {{
+                hudContainer.innerHTML = `
+                    <svg width="220" height="145" viewBox="0 0 220 145">
+                        <style>
+                            .b1 {{ transform-origin: bottom; animation: bS 0.9s ease-in-out infinite alternate; }}
+                            .b2 {{ transform-origin: bottom; animation: bS 0.7s ease-in-out infinite 0.2s alternate; }}
+                            @keyframes bS {{ 0% {{ transform: scaleY(0.3); }} 100% {{ transform: scaleY(1.2); }} }}
+                        </style>
+                        <circle cx="110" cy="68" r="40" fill="none" stroke="#cbd5e1" stroke-width="1" opacity="0.25"/>
+                        <g transform="translate(62, 68)">
+                            <rect class="b1" x="0" y="-20" width="7" height="40" rx="2" fill="${{color}}"/>
+                            <rect class="b2" x="16" y="-30" width="7" height="60" rx="2" fill="#38bdf8"/>
+                            <rect class="b1" x="32" y="-38" width="7" height="76" rx="2" fill="${{color}}"/>
+                            <rect class="b2" x="48" y="-26" width="7" height="52" rx="2" fill="#c084fc"/>
+                            <rect class="b1" x="64" y="-16" width="7" height="32" rx="2" fill="#cbd5e1"/>
+                        </g>
+                        <text x="110" y="136" font-family="'JetBrains Mono'" font-size="8.5" fill="#cbd5e1" text-anchor="middle">SÍNTESIS ACÚSTICA HARMONIC</text>
+                    </svg>
+                `;
+            }} else {{
+                hudContainer.innerHTML = `
+                    <svg width="220" height="145" viewBox="0 0 220 145">
+                        <style>
+                            .rot-n {{ transform-origin: 110px 72px; animation: rClock 16s linear infinite; }}
+                            .pul-n {{ animation: pW 2s ease-in-out infinite alternate; }}
+                        </style>
+                        <circle class="rot-n" cx="110" cy="72" r="50" fill="none" stroke="rgba(203,213,225,0.18)" stroke-width="1" stroke-dasharray="8 6"/>
+                        <circle class="pul-n" cx="110" cy="72" r="28" fill="none" stroke="${{color}}" stroke-width="1.3"/>
+                        <circle cx="110" cy="72" r="6" fill="#38bdf8"/>
+                        <text x="110" y="136" font-family="'JetBrains Mono'" font-size="8.5" fill="#cbd5e1" text-anchor="middle">RED TENSORES CLASIFICACIÓN</text>
+                    </svg>
+                `;
+            }}
+        }}
+
+        // Inicialización inmediata en el índice 0
+        snapToIndex(0);
+        </script>
+        </body>
+        </html>
+        """,
+        height=640
+    )
 
 # ==============================================================================
-# PESTAÑA 2: DIRECTORIO COMPLETO EN MATRIZ (19 TARJETAS)
+# PESTAÑA 2: DIRECTORIO COMPLETO EN MATRIZ (19 APLICACIONES)
 # ==============================================================================
 with tab_matriz:
     st.caption("Visión panorámica de las 19 aplicaciones desarrolladas.")
 
     grid_cards_html = ['<div class="grid-container">']
     for item in CATALOGO:
-        item_visitado = item["id"] in st.session_state.visited_apps
-        simbolo_visita = "✓ Revisada" if item_visitado else "○ Pendiente"
-        color_visita = "#2dd4bf" if item_visitado else "#94a3b8"
-
         grid_cards_html.append(f"""
         <div class="grid-card" style="border-top-color:{item['color']};">
             <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-                    <span style="font-size:1.2rem;">{item['icon']}</span>
-                    <span style="font-family:'JetBrains Mono'; font-size:0.68rem; color:{color_visita}; font-weight:600;">{simbolo_visita}</span>
+                    <span style="font-size:1.25rem;">{item['icon']}</span>
+                    <span style="font-family:'JetBrains Mono'; font-size:0.68rem; color:{item['color']}; font-weight:700;">#{item['id']:02d}</span>
                 </div>
                 <div style="font-weight:700; font-size:0.95rem; color:#ffffff; line-height:1.25; margin-bottom:4px;">{item['titulo']}</div>
                 <div style="font-family:'JetBrains Mono'; font-size:0.68rem; color:{item['color']}; margin-bottom:8px; text-transform:uppercase;">● {item['cat']}</div>
