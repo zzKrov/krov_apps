@@ -6,7 +6,7 @@ import json
 # 1. CONFIGURACIÓN GENERAL Y FAVICON
 # ==============================================================================
 st.set_page_config(
-    page_title="Portafolio // Auditoría de Sistemas Multimodales",
+    page_title="Juan David Segura // Interfaces Multimodales",
     page_icon="💠",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -17,7 +17,7 @@ def render_clean_html(html_str: str):
     st.markdown(compact, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. CATÁLOGO MAESTRO (19 APLICACIONES // LENGUAJE LACÓNICO)
+# 2. CATÁLOGO MAESTRO (19 APLICACIONES)
 # ==============================================================================
 CATALOGO = [
     {
@@ -234,7 +234,7 @@ CATALOGO = [
 APPS_JSON = json.dumps(CATALOGO)
 
 # ==============================================================================
-# 3. ESTILOS BASE Y AMBIENTACIÓN CÓSMICA
+# 3. ESTILOS Y CABECERA ANIMADA (JUAN DAVID SEGURA)
 # ==============================================================================
 render_clean_html("""
 <style>
@@ -257,31 +257,44 @@ body {
 
 .block-container {
     max-width: 1380px !important;
-    padding-top: 0.8rem !important;
+    padding-top: 1rem !important;
     padding-bottom: 2rem !important;
     margin: 0 auto !important;
 }
 
+/* Cabecera Cinética de Autor */
 .header-deck {
     text-align: center;
-    margin-bottom: 0.8rem;
+    margin-bottom: 1.1rem;
 }
 
-.brand-label {
+.author-signature {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.28em;
-    color: #cbd5e1;
+    font-size: clamp(0.95rem, 1.5vw, 1.25rem);
+    font-weight: 700;
+    letter-spacing: 0.38em;
     text-transform: uppercase;
+    background: linear-gradient(90deg, #94a3b8 0%, #ffffff 25%, #38bdf8 55%, #c084fc 80%, #94a3b8 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmerSignature 6s linear infinite;
+    filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.4));
+    margin-bottom: 0.25rem;
+}
+
+@keyframes shimmerSignature {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
 }
 
 .hero-title {
-    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    font-size: clamp(1.8rem, 3.2vw, 2.7rem);
     font-weight: 700;
     color: #ffffff;
-    line-height: 1.2;
-    margin: 0.2rem 0;
-    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 0.15rem 0 0.35rem 0;
+    letter-spacing: -0.025em;
     text-shadow: 0 0 25px rgba(56, 189, 248, 0.35);
 }
 
@@ -333,7 +346,7 @@ body {
 """)
 
 # ==============================================================================
-# 4. CANVAS GPU DE ALTA VISIBILIDAD (ORBES DE DERIVA SENOIDAL Y LÁSERES)
+# 4. CANVAS GPU DE ORBES FLOTANTES DE ALTA VISIBILIDAD
 # ==============================================================================
 components.html(
     """
@@ -362,7 +375,7 @@ components.html(
             h = canvas.height = Math.floor(pWin.innerHeight * scale);
         });
 
-        // 5 Grandes orbes de plasma flotantes con deriva suave
+        // 5 Grandes orbes de plasma flotantes
         const orbs = [
             { x: w * 0.15, y: h * 0.25, r: 280 * scale, vx: 0.35, vy: 0.25, baseH: 220, color: 'rgba(37, 99, 235, 0.38)' },
             { x: w * 0.85, y: h * 0.35, r: 320 * scale, vx: -0.3, vy: 0.35, baseH: 195, color: 'rgba(56, 189, 248, 0.35)' },
@@ -391,13 +404,11 @@ components.html(
             ctx.fillStyle = '#04060d';
             ctx.fillRect(0, 0, w, h);
 
-            // Modulación cromática exclusiva del fondo al completar 19/19
             const isHyperspace = Boolean(pWin.__GALAXY_HYPERSPACE__);
             if (isHyperspace) {
                 hyperspaceShift = (hyperspaceShift + 0.6) % 360;
             }
 
-            // 1. Dibujo de orbes flotantes
             ctx.globalCompositeOperation = 'screen';
             for (let b of orbs) {
                 b.x += b.vx;
@@ -420,7 +431,6 @@ components.html(
                 ctx.fill();
             }
 
-            // 2. Partículas y filamentos láser interactivos
             ctx.globalCompositeOperation = 'lighter';
             const speedMult = isHyperspace ? 1.6 : 1.0;
             for (let i = 0; i < particles.length; i++) {
@@ -437,7 +447,6 @@ components.html(
                 ctx.fillStyle = isHyperspace ? `hsla(${hyperspaceShift + (i * 15)}, 85%, 65%, 0.8)` : p.color;
                 ctx.fill();
 
-                // Conexiones de malla láser por distancia
                 for (let j = i + 1; j < particles.length; j++) {
                     const p2 = particles[j];
                     const dx = p.x - p2.x;
@@ -470,20 +479,20 @@ components.html(
 )
 
 # ==============================================================================
-# 5. ENCABEZADO Y PESTAÑAS PRINCIPALES
+# 5. CABECERA LIMPIA
 # ==============================================================================
 render_clean_html("""
 <div class="header-deck">
-    <div class="brand-label">Portafolio Profesional // Auditoría Técnica</div>
-    <div class="hero-title">Sistemas e Interfaces Multimodales</div>
-    <div class="hero-sub">Colección de 19 desarrollos en visión artificial, modelos de lenguaje, telemetría IoT y acústica.</div>
+    <div class="author-signature">Juan David Segura</div>
+    <div class="hero-title">Interfaces Multimodales</div>
+    <div class="hero-sub">19 aplicaciones interactivas en visión artificial, modelos de lenguaje, telemetría IoT y acústica.</div>
 </div>
 """)
 
-tab_estacion, tab_matriz = st.tabs(["Estación de Auditoría Paternoster", "Directorio Completo"])
+tab_estacion, tab_matriz = st.tabs(["Estación de Inspección", "Directorio"])
 
 # ==============================================================================
-# PESTAÑA 1: PATERNOSTER INFINITO + ESTACIÓN DE TRABAJO
+# PESTAÑA 1: PATERNOSTER INFINITO CON ANIMACIÓN DE ARRASTRE DISUELTA
 # ==============================================================================
 with tab_estacion:
     components.html(
@@ -504,7 +513,7 @@ with tab_estacion:
                 height: 100%;
             }}
 
-            /* --- BARRA DE AUDITORÍA --- */
+            /* --- BARRA DE PROGRESO DE AUDITORÍA --- */
             .audit-header-bar {{
                 background: rgba(10, 16, 32, 0.95);
                 border: 1px solid rgba(203, 213, 225, 0.18);
@@ -594,6 +603,37 @@ with tab_estacion:
                 cursor: grabbing;
             }}
 
+            /* Animación sutil de sugerencia de arrastre (se disuelve tras 2 ciclos) */
+            .drag-hint-pill {{
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 50;
+                pointer-events: none;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                background: rgba(8, 14, 28, 0.88);
+                border: 1px solid rgba(56, 189, 248, 0.5);
+                border-radius: 20px;
+                padding: 8px 16px;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.75rem;
+                font-weight: 600;
+                color: #38bdf8;
+                box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+                animation: dragHintFloat 2.6s ease-in-out 2 forwards;
+            }}
+
+            @keyframes dragHintFloat {{
+                0%   {{ transform: translate(-50%, -50%); opacity: 0; }}
+                20%  {{ transform: translate(-50%, -65%); opacity: 0.9; }}
+                50%  {{ transform: translate(-50%, -35%); opacity: 0.9; }}
+                80%  {{ transform: translate(-50%, -50%); opacity: 0.9; }}
+                100% {{ transform: translate(-50%, -50%); opacity: 0; }}
+            }}
+
             .paternoster-aperture {{
                 position: absolute;
                 top: 50%;
@@ -649,7 +689,6 @@ with tab_estacion:
                 text-overflow: ellipsis;
             }}
 
-            /* --- BOTÓN «VER» CON EYECCIÓN LATERAL RETARDADA --- */
             .ejected-btn {{
                 position: absolute;
                 right: -6px;
@@ -814,7 +853,7 @@ with tab_estacion:
                 color: #2dd4bf;
             }}
 
-            /* --- MODAL DE NOTIFICACIÓN DE AUDITORÍA COMPLETADA (19/19) --- */
+            /* Modal de finalización (19/19) */
             .modal-overlay {{
                 position: fixed;
                 top: 0;
@@ -838,7 +877,7 @@ with tab_estacion:
                 border: 1px solid #38bdf8;
                 border-radius: 14px;
                 padding: 28px 32px;
-                max-width: 520px;
+                max-width: 500px;
                 text-align: center;
                 box-shadow: 0 0 45px rgba(56, 189, 248, 0.45);
                 animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -856,7 +895,7 @@ with tab_estacion:
 
             .modal-title {{
                 font-family: 'Plus Jakarta Sans', sans-serif;
-                font-size: 1.4rem;
+                font-size: 1.35rem;
                 font-weight: 700;
                 color: #ffffff;
                 margin-bottom: 8px;
@@ -891,23 +930,23 @@ with tab_estacion:
         </head>
         <body>
 
-        <!-- MODAL DE NOTIFICACIÓN DE FINALIZACIÓN -->
+        <!-- MODAL DE FINALIZACIÓN -->
         <div class="modal-overlay" id="completion-modal">
             <div class="modal-card">
                 <div class="modal-icon">💠</div>
-                <div class="modal-title">Auditoría Técnica Completada</div>
+                <div class="modal-title">Inspección Completada</div>
                 <div class="modal-body">
-                    Has completado con éxito la revisión del portafolio. Las <strong>19 aplicaciones</strong> han sido inspeccionadas y verificadas correctamente.
+                    Las <strong>19 aplicaciones</strong> del portafolio han sido verificadas con éxito. Todos los sistemas de visión, modelos de lenguaje, telemetría IoT y actuadores se encuentran validados.
                 </div>
-                <button class="modal-btn" onclick="dismissModal()">Aceptar y Explorar</button>
+                <button class="modal-btn" onclick="dismissModal()">Aceptar y Continuar</button>
             </div>
         </div>
 
         <!-- BARRA MAESTRA DE AUDITORÍA -->
         <div class="audit-header-bar">
             <div class="audit-bar-top">
-                <span style="color:#cbd5e1; font-weight:700;">AUDITORÍA DE PORTAFOLIO</span>
-                <span id="audit-stats-text" style="color:#38bdf8; font-weight:700;">00 de 19 verificadas (0%)</span>
+                <span style="color:#cbd5e1; font-weight:700;">PROGRESO</span>
+                <span id="audit-stats-text" style="color:#38bdf8; font-weight:700;">00 / 19 (0%)</span>
             </div>
             <div class="progress-track">
                 <div class="progress-fill" id="audit-progress-fill" style="width: 4%;"></div>
@@ -915,20 +954,25 @@ with tab_estacion:
         </div>
 
         <div class="deck-wrapper">
-            <!-- ESTANTE PATERNOSTER INFINITO -->
+            <!-- ESTANTE PATERNOSTER -->
             <div class="paternoster-container">
                 <div class="paternoster-header">
-                    <span style="color:#cbd5e1;">PATERNOSTER INFINITO ↕</span>
-                    <span id="wheel-indicator" style="color:#38bdf8;">ANILLO CONTINUO</span>
+                    <span style="color:#cbd5e1;">CATÁLOGO</span>
+                    <span id="paternoster-counter" style="color:#38bdf8;">01 / 19</span>
                 </div>
                 
                 <div class="paternoster-viewport" id="viewport">
+                    <!-- Animación sutil de sugerencia de arrastre -->
+                    <div class="drag-hint-pill" id="drag-hint">
+                        <span>↕</span> <span>Deslizar</span>
+                    </div>
+
                     <div class="paternoster-aperture"></div>
                     <div id="cards-container"></div>
                 </div>
             </div>
 
-            <!-- ESTACIÓN LATERAL DE INSPECCIÓN -->
+            <!-- ESTACIÓN LATERAL -->
             <div class="workstation-container" id="workstation">
                 <div>
                     <div class="workstation-top">
@@ -972,7 +1016,7 @@ with tab_estacion:
         const vpHeight = viewport.clientHeight || 470;
         const centerOffset = (vpHeight / 2) - (CARD_HEIGHT / 2);
 
-        // Construcción DOM de las 19 tarjetas
+        // Construcción DOM de tarjetas
         APPS.forEach((app, idx) => {{
             const card = document.createElement('div');
             card.className = 'shelf-card';
@@ -1005,7 +1049,7 @@ with tab_estacion:
             cardsContainer.appendChild(card);
         }});
 
-        // --- MATEMÁTICA DEL PATERNOSTER INFINITO (ANILLO TOROIDAL) ---
+        // --- PATERNOSTER INFINITO CONTINUO ---
         function updatePaternosterShelf() {{
             const cards = cardsContainer.children;
             let closestIdx = 0;
@@ -1029,7 +1073,6 @@ with tab_estacion:
                     closestIdx = i;
                 }}
 
-                // Profundidad de campo visual
                 const opacity = Math.max(0.12, 1 - (normDist * 0.85));
                 const scale = Math.max(0.85, 1 - (normDist * 0.15));
                 const blur = Math.min(2.5, normDist * 2);
@@ -1039,7 +1082,6 @@ with tab_estacion:
                 card.style.filter = `blur(${{blur}}px)`;
             }}
 
-            // Retardo intencional de calma (260ms) para eyección lateral del botón
             clearTimeout(focusTimer);
             hideAllEjectedButtons();
 
@@ -1070,7 +1112,15 @@ with tab_estacion:
             updatePaternosterShelf();
         }}
 
-        // Arrastre con ratón (Pointer Events de 60-120 FPS)
+        function dismissHint() {{
+            const hint = document.getElementById('drag-hint');
+            if (hint) {{
+                hint.style.transition = 'opacity 0.35s ease';
+                hint.style.opacity = '0';
+                setTimeout(() => hint.remove(), 400);
+            }}
+        }}
+
         viewport.addEventListener('pointerdown', (e) => {{
             isDragging = true;
             startY = e.clientY;
@@ -1078,6 +1128,7 @@ with tab_estacion:
             viewport.setPointerCapture(e.pointerId);
             clearTimeout(focusTimer);
             hideAllEjectedButtons();
+            dismissHint();
         }});
 
         viewport.addEventListener('pointermove', (e) => {{
@@ -1099,18 +1150,20 @@ with tab_estacion:
             currentScrollY -= e.deltaY * 0.75;
             updatePaternosterShelf();
             snapToIndex(focusedIndex);
+            dismissHint();
         }}, {{ passive: false }});
 
-        // Soporte de navegación por teclado (▲ / ▼)
         window.addEventListener('keydown', (e) => {{
             if (e.key === 'ArrowUp') {{
                 snapToIndex((focusedIndex - 1 + TOTAL_APPS) % TOTAL_APPS);
+                dismissHint();
             }} else if (e.key === 'ArrowDown') {{
                 snapToIndex((focusedIndex + 1) % TOTAL_APPS);
+                dismissHint();
             }}
         }});
 
-        // --- GESTIÓN DE AUDITORÍA Y ACCIONES ---
+        // --- FLUJO DE AUDITORÍA ---
         function markAppAsSeen(id) {{
             if (!verifiedApps.has(id)) {{
                 verifiedApps.add(id);
@@ -1147,12 +1200,10 @@ with tab_estacion:
         function updateAuditProgressBar() {{
             const count = verifiedApps.size;
             const pct = Math.round((count / TOTAL_APPS) * 100);
-            document.getElementById('audit-stats-text').innerText = `${{String(count).padStart(2, '0')}} de ${{TOTAL_APPS}} verificadas (${{pct}}%)`;
+            document.getElementById('audit-stats-text').innerText = `${{String(count).padStart(2, '0')}} / ${{TOTAL_APPS}} (${{pct}}%)`;
             document.getElementById('audit-progress-fill').style.width = `${{Math.max(4, pct)}}%`;
 
-            // Verificación del estado final de 19/19
             if (count === TOTAL_APPS) {{
-                // Activar modulación psicodélica exclusivamente en el fondo
                 if (window.parent) {{
                     window.parent.__GALAXY_HYPERSPACE__ = true;
                 }}
@@ -1172,6 +1223,7 @@ with tab_estacion:
         }}
 
         function updateWorkstation(app) {{
+            document.getElementById('paternoster-counter').innerText = `${{String(app.id).padStart(2, '0')}} / ${{TOTAL_APPS}}`;
             document.getElementById('ws-cat').innerText = app.cat.toUpperCase();
             document.getElementById('ws-cat').style.color = app.color;
             document.getElementById('ws-counter').innerText = `#${{String(app.id).padStart(2, '0')}} / ${{TOTAL_APPS}}`;
@@ -1211,7 +1263,7 @@ with tab_estacion:
                         <circle class="pulse-w" cx="110" cy="68" r="45" fill="none" stroke="${{color}}" stroke-width="1.4"/>
                         <circle class="spin-r" cx="110" cy="68" r="26" fill="none" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="6 4"/>
                         <circle cx="110" cy="68" r="5" fill="#38bdf8"/>
-                        <text x="110" y="128" font-family="'JetBrains Mono'" font-size="8" fill="#cbd5e1" text-anchor="middle">MQTT ENLACE PERSISTENTE QOS 1</text>
+                        <text x="110" y="128" font-family="'JetBrains Mono'" font-size="8" fill="#cbd5e1" text-anchor="middle">MQTT NODO ENLACE PERSISTENTE</text>
                     </svg>
                 `;
             }} else if (type === 'vision') {{
@@ -1264,7 +1316,7 @@ with tab_estacion:
             }}
         }}
 
-        // Inicialización
+        // Inicialización del estante en el primer ítem
         updatePaternosterShelf();
         updateAuditProgressBar();
         snapToIndex(0);
@@ -1272,15 +1324,13 @@ with tab_estacion:
         </body>
         </html>
         """,
-        height=690
+        height=685
     )
 
 # ==============================================================================
-# PESTAÑA 2: DIRECTORIO COMPLETO EN MATRIZ (19 APLICACIONES)
+# PESTAÑA 2: DIRECTORIO COMPLETO
 # ==============================================================================
 with tab_matriz:
-    st.caption("Visión panorámica de todas las aplicaciones desarrolladas.")
-
     grid_cards_html = ['<div class="grid-container">']
     for item in CATALOGO:
         grid_cards_html.append(f"""
@@ -1307,8 +1357,8 @@ with tab_matriz:
 st.write("")
 render_clean_html("""
 <div style="text-align:center; padding:1.2rem 0; border-top:1px solid rgba(203,213,225,0.12); margin-top:1.2rem;">
-    <div style="font-family:'JetBrains Mono'; font-size:0.72rem; letter-spacing:0.2em; color:#cbd5e1; text-transform:uppercase;">
-        PORTAFOLIO DE SISTEMAS E INTERFACES MULTIMODALES
+    <div style="font-family:'JetBrains Mono'; font-size:0.72rem; letter-spacing:0.25em; color:#cbd5e1; text-transform:uppercase;">
+        JUAN DAVID SEGURA · PORTAFOLIO DE SISTEMAS E INTERFACES MULTIMODALES
     </div>
     <div style="font-size:0.8rem; color:#64748b; margin-top:4px;">
         19 aplicaciones desplegadas sobre Streamlit Cloud
