@@ -234,7 +234,7 @@ CATALOGO = [
 APPS_JSON = json.dumps(CATALOGO)
 
 # ==============================================================================
-# 3. ESTILOS BASE Y CONTENEDOR MAESTRO
+# 3. ESTILOS BASE Y AMBIENTACIÓN CÓSMICA
 # ==============================================================================
 render_clean_html("""
 <style>
@@ -276,7 +276,7 @@ body {
 }
 
 .hero-title {
-    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
     font-weight: 700;
     color: #ffffff;
     line-height: 1.2;
@@ -333,7 +333,144 @@ body {
 """)
 
 # ==============================================================================
-# 4. ENCABEZADO Y PESTAÑAS PRINCIPALES
+# 4. CANVAS GPU DE ALTA VISIBILIDAD (ORBES DE DERIVA SENOIDAL Y LÁSERES)
+# ==============================================================================
+components.html(
+    """
+    <script>
+    (function() {
+        const pWin = window.parent;
+        const pDoc = pWin.document;
+        if (pWin.__GALAXY_BG_ACTIVE__) return;
+        pWin.__GALAXY_BG_ACTIVE__ = true;
+
+        let canvas = pDoc.getElementById('galaxy-blue-canvas');
+        if (!canvas) {
+            canvas = pDoc.createElement('canvas');
+            canvas.id = 'galaxy-blue-canvas';
+            canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;background:#04060d;';
+            pDoc.body.prepend(canvas);
+        }
+
+        const ctx = canvas.getContext('2d', { alpha: false });
+        const scale = pWin.innerWidth < 768 ? 0.5 : 0.7;
+        let w = canvas.width = Math.floor(pWin.innerWidth * scale);
+        let h = canvas.height = Math.floor(pWin.innerHeight * scale);
+
+        pWin.addEventListener('resize', () => {
+            w = canvas.width = Math.floor(pWin.innerWidth * scale);
+            h = canvas.height = Math.floor(pWin.innerHeight * scale);
+        });
+
+        // 5 Grandes orbes de plasma flotantes con deriva suave
+        const orbs = [
+            { x: w * 0.15, y: h * 0.25, r: 280 * scale, vx: 0.35, vy: 0.25, baseH: 220, color: 'rgba(37, 99, 235, 0.38)' },
+            { x: w * 0.85, y: h * 0.35, r: 320 * scale, vx: -0.3, vy: 0.35, baseH: 195, color: 'rgba(56, 189, 248, 0.35)' },
+            { x: w * 0.5,  y: h * 0.85, r: 290 * scale, vx: 0.25, vy: -0.3, baseH: 275, color: 'rgba(168, 85, 247, 0.32)' },
+            { x: w * 0.2,  y: h * 0.75, r: 260 * scale, vx: -0.25, vy: -0.25, baseH: 260, color: 'rgba(192, 132, 252, 0.30)' },
+            { x: w * 0.8,  y: h * 0.8,  r: 270 * scale, vx: 0.2,  vy: -0.35, baseH: 185, color: 'rgba(34, 211, 238, 0.32)' }
+        ];
+
+        const pColors = ['#38bdf8', '#818cf8', '#c084fc', '#93c5fd', '#cbd5e1'];
+        const pCount = pWin.innerWidth < 768 ? 16 : 24;
+        const particles = [];
+        for (let i = 0; i < pCount; i++) {
+            particles.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                r: Math.random() * 1.5 + 0.7,
+                vx: (Math.random() - 0.5) * 0.45,
+                vy: (Math.random() - 0.5) * 0.45,
+                color: pColors[i % pColors.length]
+            });
+        }
+
+        let hyperspaceShift = 0;
+
+        function loop() {
+            ctx.fillStyle = '#04060d';
+            ctx.fillRect(0, 0, w, h);
+
+            // Modulación cromática exclusiva del fondo al completar 19/19
+            const isHyperspace = Boolean(pWin.__GALAXY_HYPERSPACE__);
+            if (isHyperspace) {
+                hyperspaceShift = (hyperspaceShift + 0.6) % 360;
+            }
+
+            // 1. Dibujo de orbes flotantes
+            ctx.globalCompositeOperation = 'screen';
+            for (let b of orbs) {
+                b.x += b.vx;
+                b.y += b.vy;
+                if (b.x < -80 || b.x > w + 80) b.vx *= -1;
+                if (b.y < -80 || b.y > h + 80) b.vy *= -1;
+
+                let c = b.color;
+                if (isHyperspace) {
+                    const currentH = (b.baseH + hyperspaceShift) % 360;
+                    c = `hsla(${currentH}, 90%, 55%, 0.42)`;
+                }
+
+                const g = ctx.createRadialGradient(b.x, b.y, 4, b.x, b.y, b.r);
+                g.addColorStop(0, c);
+                g.addColorStop(1, 'rgba(4, 6, 13, 0)');
+                ctx.beginPath();
+                ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                ctx.fillStyle = g;
+                ctx.fill();
+            }
+
+            // 2. Partículas y filamentos láser interactivos
+            ctx.globalCompositeOperation = 'lighter';
+            const speedMult = isHyperspace ? 1.6 : 1.0;
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                p.x += p.vx * speedMult;
+                p.y += p.vy * speedMult;
+                if (p.x < 0) p.x = w;
+                if (p.x > w) p.x = 0;
+                if (p.y < 0) p.y = h;
+                if (p.y > h) p.y = 0;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = isHyperspace ? `hsla(${hyperspaceShift + (i * 15)}, 85%, 65%, 0.8)` : p.color;
+                ctx.fill();
+
+                // Conexiones de malla láser por distancia
+                for (let j = i + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const d2 = dx * dx + dy * dy;
+                    if (d2 < 4500) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        let strokeCol = `rgba(56, 189, 248, ${0.28 * (1 - d2 / 4500)})`;
+                        if (isHyperspace) {
+                            strokeCol = `hsla(${hyperspaceShift}, 85%, 65%, ${0.45 * (1 - d2 / 4500)})`;
+                        }
+                        ctx.strokeStyle = strokeCol;
+                        ctx.lineWidth = 0.65;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            ctx.globalCompositeOperation = 'source-over';
+            requestAnimationFrame(loop);
+        }
+        loop();
+    })();
+    </script>
+    """,
+    height=0,
+    width=0
+)
+
+# ==============================================================================
+# 5. ENCABEZADO Y PESTAÑAS PRINCIPALES
 # ==============================================================================
 render_clean_html("""
 <div class="header-deck">
@@ -367,18 +504,7 @@ with tab_estacion:
                 height: 100%;
             }}
 
-            /* --- ESTADO FINAL PSICODÉLICO / HIPNÓTICO (19/19 VERIFICADAS) --- */
-            body.hyperspace-active {{
-                animation: chromaticHypnosis 6s linear infinite alternate;
-            }}
-
-            @keyframes chromaticHypnosis {{
-                0% {{ filter: hue-rotate(0deg) saturate(1.8); }}
-                50% {{ filter: hue-rotate(180deg) saturate(2.4); }}
-                100% {{ filter: hue-rotate(360deg) saturate(1.8); }}
-            }}
-
-            /* --- BARRA DE PROGRESO LÍQUIDA --- */
+            /* --- BARRA DE AUDITORÍA --- */
             .audit-header-bar {{
                 background: rgba(10, 16, 32, 0.95);
                 border: 1px solid rgba(203, 213, 225, 0.18);
@@ -423,30 +549,7 @@ with tab_estacion:
                 100% {{ background-position: 260% 50%; }}
             }}
 
-            /* BANNER DE AUDITORÍA COMPLETA */
-            .celebration-banner {{
-                display: none;
-                text-align: center;
-                background: linear-gradient(90deg, rgba(56,189,248,0.2), rgba(192,132,252,0.3), rgba(45,212,191,0.2));
-                border: 1px solid #38bdf8;
-                border-radius: 8px;
-                padding: 6px;
-                font-family: 'JetBrains Mono', monospace;
-                font-size: 0.76rem;
-                font-weight: 700;
-                color: #ffffff;
-                letter-spacing: 0.15em;
-                margin-bottom: 10px;
-                box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
-                animation: pulseGlow 1.8s infinite alternate;
-            }}
-
-            @keyframes pulseGlow {{
-                0% {{ box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }}
-                100% {{ box-shadow: 0 0 35px rgba(192, 132, 252, 0.9); }}
-            }}
-
-            /* --- CONTENEDOR PRINCIPAL MASTER-DETAIL --- */
+            /* --- CONTENEDOR MASTER-DETAIL --- */
             .deck-wrapper {{
                 display: flex;
                 gap: 24px;
@@ -491,7 +594,6 @@ with tab_estacion:
                 cursor: grabbing;
             }}
 
-            /* Apertura central con resplandor cian */
             .paternoster-aperture {{
                 position: absolute;
                 top: 50%;
@@ -581,7 +683,7 @@ with tab_estacion:
                 filter: brightness(1.15);
             }}
 
-            /* --- ESTACIÓN DE INSPECCIÓN LATERAL (WORKSTATION) --- */
+            /* --- ESTACIÓN LATERAL DE INSPECCIÓN --- */
             .workstation-container {{
                 flex: 1.05;
                 background: linear-gradient(145deg, rgba(12, 18, 38, 0.98) 0%, rgba(6, 10, 22, 0.98) 100%);
@@ -711,9 +813,95 @@ with tab_estacion:
                 border-color: #2dd4bf;
                 color: #2dd4bf;
             }}
+
+            /* --- MODAL DE NOTIFICACIÓN DE AUDITORÍA COMPLETADA (19/19) --- */
+            .modal-overlay {{
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(4, 6, 13, 0.85);
+                backdrop-filter: blur(8px);
+                display: none;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+            }}
+
+            .modal-overlay.active {{
+                display: flex;
+            }}
+
+            .modal-card {{
+                background: linear-gradient(145deg, #0d152d 0%, #060913 100%);
+                border: 1px solid #38bdf8;
+                border-radius: 14px;
+                padding: 28px 32px;
+                max-width: 520px;
+                text-align: center;
+                box-shadow: 0 0 45px rgba(56, 189, 248, 0.45);
+                animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }}
+
+            @keyframes popIn {{
+                0% {{ transform: scale(0.85); opacity: 0; }}
+                100% {{ transform: scale(1); opacity: 1; }}
+            }}
+
+            .modal-icon {{
+                font-size: 2.4rem;
+                margin-bottom: 8px;
+            }}
+
+            .modal-title {{
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 1.4rem;
+                font-weight: 700;
+                color: #ffffff;
+                margin-bottom: 8px;
+            }}
+
+            .modal-body {{
+                font-size: 0.9rem;
+                color: #cbd5e1;
+                line-height: 1.6;
+                margin-bottom: 20px;
+            }}
+
+            .modal-btn {{
+                background: linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #7c3aed 100%);
+                color: #ffffff;
+                border: 1px solid rgba(56, 189, 248, 0.6);
+                border-radius: 6px;
+                padding: 10px 24px;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.85rem;
+                font-weight: 700;
+                cursor: pointer;
+                box-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
+                transition: all 0.2s ease;
+            }}
+
+            .modal-btn:hover {{
+                box-shadow: 0 0 30px rgba(56, 189, 248, 0.8);
+                transform: translateY(-1px);
+            }}
         </style>
         </head>
         <body>
+
+        <!-- MODAL DE NOTIFICACIÓN DE FINALIZACIÓN -->
+        <div class="modal-overlay" id="completion-modal">
+            <div class="modal-card">
+                <div class="modal-icon">💠</div>
+                <div class="modal-title">Auditoría Técnica Completada</div>
+                <div class="modal-body">
+                    Has completado con éxito la revisión del portafolio. Las <strong>19 aplicaciones</strong> han sido inspeccionadas y verificadas correctamente.
+                </div>
+                <button class="modal-btn" onclick="dismissModal()">Aceptar y Explorar</button>
+            </div>
+        </div>
 
         <!-- BARRA MAESTRA DE AUDITORÍA -->
         <div class="audit-header-bar">
@@ -724,10 +912,6 @@ with tab_estacion:
             <div class="progress-track">
                 <div class="progress-fill" id="audit-progress-fill" style="width: 4%;"></div>
             </div>
-        </div>
-
-        <div class="celebration-banner" id="celebration-banner">
-            ✦ AUDITORÍA COMPLETA // 19 DE 19 SISTEMAS REVISADOS Y VERIFICADOS ✦
         </div>
 
         <div class="deck-wrapper">
@@ -780,6 +964,7 @@ with tab_estacion:
         let startScrollY = 0;
         let focusedIndex = 0;
         let focusTimer = null;
+        let hasShownCelebrationModal = false;
         let verifiedApps = new Set(JSON.parse(localStorage.getItem('krov_audit_seen') || '[]'));
 
         const viewport = document.getElementById('viewport');
@@ -820,7 +1005,7 @@ with tab_estacion:
             cardsContainer.appendChild(card);
         }});
 
-        // --- MATEMÁTICA DEL PATERNOSTER INFINITO (ANILLO CONTINUO) ---
+        // --- MATEMÁTICA DEL PATERNOSTER INFINITO (ANILLO TOROIDAL) ---
         function updatePaternosterShelf() {{
             const cards = cardsContainer.children;
             let closestIdx = 0;
@@ -830,7 +1015,6 @@ with tab_estacion:
                 const card = cards[i];
                 const rawPos = (i * CARD_HEIGHT) + currentScrollY;
 
-                // Envoltura toroidal continua sin límites superior o inferior
                 let delta = (((rawPos % LOOP_HEIGHT) + LOOP_HEIGHT) % LOOP_HEIGHT);
                 if (delta > LOOP_HEIGHT / 2) {{
                     delta -= LOOP_HEIGHT;
@@ -855,7 +1039,7 @@ with tab_estacion:
                 card.style.filter = `blur(${{blur}}px)`;
             }}
 
-            // Retardo controlado para eyección del botón
+            // Retardo intencional de calma (260ms) para eyección lateral del botón
             clearTimeout(focusTimer);
             hideAllEjectedButtons();
 
@@ -878,7 +1062,6 @@ with tab_estacion:
         }}
 
         function snapToIndex(idx) {{
-            // Salto circular por el camino más corto
             let diff = idx - focusedIndex;
             if (diff > TOTAL_APPS / 2) diff -= TOTAL_APPS;
             if (diff < -TOTAL_APPS / 2) diff += TOTAL_APPS;
@@ -887,7 +1070,7 @@ with tab_estacion:
             updatePaternosterShelf();
         }}
 
-        // Arrastre con ratón (Pointer Events de baja latencia)
+        // Arrastre con ratón (Pointer Events de 60-120 FPS)
         viewport.addEventListener('pointerdown', (e) => {{
             isDragging = true;
             startY = e.clientY;
@@ -968,14 +1151,24 @@ with tab_estacion:
             document.getElementById('audit-progress-fill').style.width = `${{Math.max(4, pct)}}%`;
 
             // Verificación del estado final de 19/19
-            const banner = document.getElementById('celebration-banner');
             if (count === TOTAL_APPS) {{
-                document.body.classList.add('hyperspace-active');
-                banner.style.display = 'block';
+                // Activar modulación psicodélica exclusivamente en el fondo
+                if (window.parent) {{
+                    window.parent.__GALAXY_HYPERSPACE__ = true;
+                }}
+                if (!hasShownCelebrationModal) {{
+                    document.getElementById('completion-modal').classList.add('active');
+                    hasShownCelebrationModal = true;
+                }}
             }} else {{
-                document.body.classList.remove('hyperspace-active');
-                banner.style.display = 'none';
+                if (window.parent) {{
+                    window.parent.__GALAXY_HYPERSPACE__ = false;
+                }}
             }}
+        }}
+
+        function dismissModal() {{
+            document.getElementById('completion-modal').classList.remove('active');
         }}
 
         function updateWorkstation(app) {{
