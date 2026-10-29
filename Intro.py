@@ -1,11 +1,11 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-# ============================================================
-# CONFIGURACIÓN GENERAL
-# ============================================================
+# ==============================================================================
+# 1. CONFIGURACIÓN GENERAL
+# ==============================================================================
 st.set_page_config(
-    page_title="Portafolio de Aplicaciones // Sistemas e Interfaces",
+    page_title="Portafolio de Sistemas e Interfaces Multimodales",
     page_icon="✦",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -15,64 +15,65 @@ def render_clean_html(html_str: str):
     compact = "\n".join(line.strip() for line in html_str.splitlines() if line.strip())
     st.markdown(compact, unsafe_allow_html=True)
 
-# ============================================================
-# ESTADO DE SESIÓN
-# ============================================================
+# ==============================================================================
+# 2. ESTADO DE SESIÓN Y GESTIÓN DE AUDITORÍA
+# ==============================================================================
 if "carousel_idx" not in st.session_state:
     st.session_state.carousel_idx = 0
 
 if "visited_apps" not in st.session_state:
     st.session_state.visited_apps = set()
 
-# ============================================================
-# MAPA DE COLORES POR CATEGORÍA (AZULES, PÚRPURAS Y PLATINO)
-# ============================================================
-# Cada categoría tiene un tono específico y coherente:
-# - Azules: Visión Artificial, Multimodal, Óptica y Física.
-# - Púrpuras/Violetas: Texto, Redes, Voz, Interacción y Creativa.
+# ==============================================================================
+# 3. MATRIZ CROMÁTICA ARMÓNICA (AZULES, PÚRPURAS Y PLATINO)
+# ==============================================================================
+# Cada dominio cuenta con un tono exclusivo dentro del espectro frío/galáctico:
 CATEGORY_PALETTE = {
-    "Visión Artificial":   {"color": "#38bdf8", "spectrum": "Azul Celeste"},     # Cyan celestial
-    "Visión Multimodal":   {"color": "#0ea5e9", "spectrum": "Azul Zafiro"},      # Zafiro profundo
-    "Óptica y Traducción": {"color": "#60a5fa", "spectrum": "Azul Cerúleo"},     # Azul zafiro medio
-    "Óptica y Documentos": {"color": "#93c5fd", "spectrum": "Azul Hielo Plata"},  # Azul platino glacial
-    "Redes y Física":      {"color": "#7dd3fc", "spectrum": "Azul Ártico"},      # Hielo luminoso
-    "Texto y Semántica":   {"color": "#a78bfa", "spectrum": "Lavanda Amatista"}, # Lavanda suave
-    "Texto y Documentos":  {"color": "#818cf8", "spectrum": "Índigo Estelar"},   # Índigo azul-púrpura
-    "Redes Neuronales":    {"color": "#8b5cf6", "spectrum": "Púrpura Real"},     # Púrpura eléctrico
-    "Voz y Acústica":      {"color": "#c084fc", "spectrum": "Violeta Orquídea"}, # Violeta brillante
-    "Sistemas Sensoriales":{"color": "#7c3aed", "spectrum": "Violeta Imperial"}, # Violeta profundo
-    "Interacción Humana":  {"color": "#a855f7", "spectrum": "Púrpura Cósmico"},  # Púrpura medio
-    "Interacción Lúdica":  {"color": "#6366f1", "spectrum": "Cobalto Índigo"},   # Azul cobalto violáceo
-    "Visión Creativa":     {"color": "#d8b4fe", "spectrum": "Lila Platino"},     # Lila plateado
+    "Visión por Computador":       {"color": "#38bdf8", "border": "#38bdf8", "tag": "Cian Eléctrico"},
+    "Visión Multimodal":           {"color": "#0ea5e9", "border": "#0ea5e9", "tag": "Azul Zafiro"},
+    "Óptica y Documentos":         {"color": "#93c5fd", "border": "#93c5fd", "tag": "Platino Glacial"},
+    "Óptica y Análisis 3D":        {"color": "#60a5fa", "border": "#60a5fa", "tag": "Azul Cerúleo"},
+    "Sistemas IoT y Telemetría":   {"color": "#22d3ee", "border": "#22d3ee", "tag": "Cian Digital"},
+    "Actuación Ciberfísica":       {"color": "#3b82f6", "border": "#3b82f6", "tag": "Cobalto Estelar"},
+    "Interfaces Vocales IoT":      {"color": "#c084fc", "border": "#c084fc", "tag": "Violeta Vocal"},
+    "Acústica y Traducción":       {"color": "#a855f7", "border": "#a855f7", "tag": "Púrpura Acústico"},
+    "Modelos de Lenguaje (RAG)":   {"color": "#818cf8", "border": "#818cf8", "tag": "Índigo Vectorial"},
+    "Procesamiento de Lenguaje":   {"color": "#a78bfa", "border": "#a78bfa", "tag": "Lavanda Amatista"},
+    "Redes Neuronales":            {"color": "#8b5cf6", "border": "#8b5cf6", "tag": "Púrpura Real"},
+    "Modelado Físico y Tensor":    {"color": "#7dd3fc", "border": "#7dd3fc", "tag": "Azul Hielo"},
+    "Diseño y Visión Creativa":    {"color": "#d8b4fe", "border": "#d8b4fe", "tag": "Lila Platino"},
+    "Sistemas Multisensoriales":   {"color": "#7c3aed", "border": "#7c3aed", "tag": "Violeta Imperial"},
+    "Interacción y Bienestar":     {"color": "#6366f1", "border": "#6366f1", "tag": "Cobalto Profundo"},
+    "Interacción Humana":          {"color": "#a855f7", "border": "#a855f7", "tag": "Orquídea Cósmica"}
 }
 
-# ============================================================
-# CATÁLOGO DE APLICACIONES CODIFICADO POR CATEGORÍA
-# ============================================================
+# ==============================================================================
+# 4. CATÁLOGO MAESTRO (19 APLICACIONES COMPLETAS)
+# ==============================================================================
 CATALOGO = [
     {
         "id": 1,
         "titulo": "Detector de Objetos en Vivo",
-        "cat": "Visión Artificial",
+        "cat": "Visión por Computador",
         "url": "https://yolozz.streamlit.app",
         "icon": "🎯",
         "svg_type": "vision",
-        "proposito": "Detección y conteo de objetos en tiempo real mediante cámara web o imágenes estáticas para 80 clases estándar.",
-        "codigo": "Inferencia con modelo YOLOv5, filtrado de solapamiento mediante supresión de no máximos (NMS) y emisión de alertas auditivas.",
-        "uso": "Control de aforo, gestión de inventarios y asistencia visual.",
-        "color": CATEGORY_PALETTE["Visión Artificial"]["color"]
+        "proposito": "Detección y conteo de entidades en tiempo real mediante cámara web con soporte para 80 clases estandarizadas.",
+        "codigo": "Inferencia YOLOv5 en cliente, supresión de no máximos (NMS) adaptativa y señales acústicas de confirmación.",
+        "uso": "Control de aforo, logística de bodegas y asistencia a personas con discapacidad visual.",
+        "color": CATEGORY_PALETTE["Visión por Computador"]["color"]
     },
     {
         "id": 2,
         "titulo": "Generador de Nube de Palabras",
-        "cat": "Texto y Semántica",
+        "cat": "Procesamiento de Lenguaje",
         "url": "https://wordcloudz.streamlit.app",
         "icon": "☁️",
         "svg_type": "text",
-        "proposito": "Representación visual de términos clave ponderados según su frecuencia relativa en textos extensos.",
-        "codigo": "Limpieza léxica con expresiones regulares, supresión de palabras vacías (stop words) y composición gráfica con WordCloud.",
-        "uso": "Análisis de encuestas, resumen de opiniones y exploración documental.",
-        "color": CATEGORY_PALETTE["Texto y Semántica"]["color"]
+        "proposito": "Composición gráfica de términos preponderantes ponderados por su densidad de frecuencia léxica.",
+        "codigo": "Filtrado con expresiones regulares, supresión multilingüe de stop-words y distribución espacial con WordCloud.",
+        "uso": "Auditoría de reseñas de clientes, minería de opiniones y síntesis de discursos.",
+        "color": CATEGORY_PALETTE["Procesamiento de Lenguaje"]["color"]
     },
     {
         "id": 3,
@@ -81,9 +82,9 @@ CATALOGO = [
         "url": "https://mnistz.streamlit.app",
         "icon": "✍️",
         "svg_type": "neural",
-        "proposito": "Lienzo de dibujo manual para clasificación de dígitos numéricos (0-9) con cálculo de certidumbre probabilística.",
-        "codigo": "Normalización de imagen a 28×28 píxeles mediante Pillow y clasificación por red convolucional sobre dataset MNIST.",
-        "uso": "Digitalización de formularios manuscritos y procesamiento de documentos bancarios.",
+        "proposito": "Lienzo de dibujo para clasificación instantánea de dígitos manuscritos (0-9) con cálculo de certidumbre.",
+        "codigo": "Aislamiento por bounding box en Pillow, normalización a 28×28 píxeles e inferencia convolucional profunda.",
+        "uso": "Procesamiento de comprobantes de pago, digitalización postal y formularios censales.",
         "color": CATEGORY_PALETTE["Redes Neuronales"]["color"]
     },
     {
@@ -93,46 +94,46 @@ CATALOGO = [
         "url": "https://visionz.streamlit.app",
         "icon": "👁️",
         "svg_type": "vision",
-        "proposito": "Generación automática de descripciones contextuales y estructuradas a partir de imágenes cargadas.",
-        "codigo": "Codificación en base64 y consulta por flujo continuo (streaming) a modelos de visión multimodal de OpenAI.",
-        "uso": "Inspección técnica, documentación de daños y accesibilidad descriptiva.",
+        "proposito": "Evaluación semántica de escenas fotográficas para generación de reportes periciales estructurados.",
+        "codigo": "Codificación Base64 en memoria y conexión continua por streaming con modelos multimodales GPT-4o.",
+        "uso": "Inspección de daños para aseguradoras, peritaje de obras civiles y accesibilidad inclusiva.",
         "color": CATEGORY_PALETTE["Visión Multimodal"]["color"]
     },
     {
         "id": 5,
         "titulo": "Traductor de Voz a Audio",
-        "cat": "Voz y Acústica",
+        "cat": "Acústica y Traducción",
         "url": "https://traductorz.streamlit.app",
         "icon": "🎙️",
         "svg_type": "audio",
-        "proposito": "Recepción de voz por micrófono, traducción instantánea a idiomas seleccionados y reproducción sintetizada.",
-        "codigo": "Captura con Web Speech API, traducción automática y síntesis auditiva parametrizada con gTTS.",
-        "uso": "Atención multilingüe a usuarios y asistencia de pronunciación en idiomas extranjeros.",
-        "color": CATEGORY_PALETTE["Voz y Acústica"]["color"]
+        "proposito": "Captura vocal por micrófono, traducción instantánea a idiomas de destino y síntesis de voz fonética.",
+        "codigo": "Web Speech API integrada mediante puentes Bokeh, motor de traducción Google Translate y síntesis con gTTS.",
+        "uso": "Atención turística internacional en ventanilla y práctica de pronunciación idiomática.",
+        "color": CATEGORY_PALETTE["Acústica y Traducción"]["color"]
     },
     {
         "id": 6,
         "titulo": "Detector de Presencia y Postura",
-        "cat": "Visión Artificial",
+        "cat": "Visión por Computador",
         "url": "https://teachablez.streamlit.app",
         "icon": "🛡️",
         "svg_type": "vision",
-        "proposito": "Seguimiento corporal y evaluación postural en el cliente local sin transmisión de video a servidores externos.",
-        "codigo": "Inferencia con TensorFlow.js y PoseNet sobre HTML5 Canvas, evaluando posiciones de articulaciones clave.",
-        "uso": "Supervisión ergonómica frente a pantallas y quioscos interactivos sin contacto.",
-        "color": CATEGORY_PALETTE["Visión Artificial"]["color"]
+        "proposito": "Monitoreo corporal y análisis postural en el navegador sin transmitir flujos de video externos.",
+        "codigo": "Inferencia local en cliente con TensorFlow.js y PoseNet sobre HTML5 Canvas, evaluando articulaciones axiales.",
+        "uso": "Supervisión ergonómica laboral, seguridad industrial y quioscos sin contacto táctil.",
+        "color": CATEGORY_PALETTE["Visión por Computador"]["color"]
     },
     {
         "id": 7,
         "titulo": "Espacio de Pausa y Bienestar",
-        "cat": "Interacción Lúdica",
+        "cat": "Interacción y Bienestar",
         "url": "https://bendover.streamlit.app",
         "icon": "🐇",
         "svg_type": "creative",
-        "proposito": "Entorno interactivo con seguimiento del cursor mediante partículas visuales y síntesis de voz.",
-        "codigo": "Simulación física de partículas en JavaScript sobre Canvas 2D y lectura vocal mediante SpeechSynthesis API.",
-        "uso": "Pausas activas y reducción de la fatiga cognitiva durante sesiones prolongadas.",
-        "color": CATEGORY_PALETTE["Interacción Lúdica"]["color"]
+        "proposito": "Entorno antiestrés con seguimiento de cursor mediante física de partículas dinámicas y síntesis vocal.",
+        "codigo": "Simulador cinemático en JavaScript acelerado por Canvas 2D y generación vocal local por SpeechSynthesis.",
+        "uso": "Pausas activas en turnos prolongados y disminución de fatiga mental frente a monitores.",
+        "color": CATEGORY_PALETTE["Interacción y Bienestar"]["color"]
     },
     {
         "id": 8,
@@ -141,22 +142,22 @@ CATALOGO = [
         "url": "https://sentimentz.streamlit.app",
         "icon": "🤖",
         "svg_type": "text",
-        "proposito": "Interacción textual con análisis de polaridad afectiva y retroalimentación adaptativa.",
-        "codigo": "Clasificación léxica de sentimiento, sincronización con animaciones Lottie y síntesis de voz multilingüe.",
-        "uso": "Bitácoras guiadas, registro de ánimo y apoyo en redacción reflexiva.",
+        "proposito": "Plataforma de diálogo asistido con detección del tono anímico del usuario y respuestas adaptativas.",
+        "codigo": "Clasificador léxico de sentimiento, sincronización de estados con animación vectorial Lottie y voz guiada.",
+        "uso": "Bitácoras emocionales reflexivas y soporte estructurado para redacción bajo estrés.",
         "color": CATEGORY_PALETTE["Interacción Humana"]["color"]
     },
     {
         "id": 9,
         "titulo": "Visor y Extractor de Texto en 3D",
-        "cat": "Óptica y Traducción",
+        "cat": "Óptica y Análisis 3D",
         "url": "https://ocryaudioz.streamlit.app",
         "icon": "🪞",
         "svg_type": "vision",
-        "proposito": "Captura fotográfica de documentos con proyección de texto sobre superficie tridimensional, traducción y lectura.",
-        "codigo": "Normalización de contraste con CLAHE en OpenCV, motor de extracción Tesseract OCR y renderizado interactivo.",
-        "uso": "Lectura asistida de impresos y comprensión de señalética en lenguas extranjeras.",
-        "color": CATEGORY_PALETTE["Óptica y Traducción"]["color"]
+        "proposito": "Captura documental con proyección tridimensional interactiva del texto extraído, traducción y lectura.",
+        "codigo": "Filtros adaptativos CLAHE en OpenCV, extracción óptica por Tesseract OCR y renderizado sobre plano 3D.",
+        "uso": "Traducción de letreros en idiomas extranjeros y digitalización para personas con baja agudeza visual.",
+        "color": CATEGORY_PALETTE["Óptica y Análisis 3D"]["color"]
     },
     {
         "id": 10,
@@ -165,88 +166,124 @@ CATALOGO = [
         "url": "https://lectorz.streamlit.app",
         "icon": "📷",
         "svg_type": "vision",
-        "proposito": "Conversión directa de capturas de cámara web en fragmentos de texto editables y exportables.",
-        "codigo": "Interpolación bicúbica para realce tipográfico, binarización adaptable y análisis de caracteres.",
-        "uso": "Transcripción ágil de fragmentos bibliográficos y registro de recibos impresos.",
+        "proposito": "Conversión inmediata de documentos físicos capturados por cámara web en texto editable y exportable.",
+        "codigo": "Ampliación bicúbica al doble de resolución, umbralización adaptable Otsu y cálculo métrico de densidad tipográfica.",
+        "uso": "Copia instantánea de citas bibliográficas e indexación rápida de facturas físicas.",
         "color": CATEGORY_PALETTE["Óptica y Documentos"]["color"]
     },
     {
         "id": 11,
         "titulo": "Interfaces Multisensoriales",
-        "cat": "Sistemas Sensoriales",
+        "cat": "Sistemas Multisensoriales",
         "url": "https://sussusamogus.streamlit.app",
         "icon": "✦",
         "svg_type": "audio",
-        "proposito": "Demostración de señalización coordinada mediante estímulos ópticos, tonos sinusoidales y vibración háptica.",
-        "codigo": "Generación matemática de tonos en memoria, integración de la Vibration API del navegador y pulsos CSS.",
-        "uso": "Señalética accesible, cabinas de control y validación de notificaciones periféricas.",
-        "color": CATEGORY_PALETTE["Sistemas Sensoriales"]["color"]
+        "proposito": "Laboratorio de señalización simultánea mediante impulsos ópticos, frecuencias acústicas puras y vibración háptica.",
+        "codigo": "Síntesis matemática de ondas sinusoidales en RAM, modulación CSS y enlace con la Vibration API del dispositivo.",
+        "uso": "Alertas para cabinas de control, señalética crítica accesible y consolas de monitoreo.",
+        "color": CATEGORY_PALETTE["Sistemas Multisensoriales"]["color"]
     },
     {
         "id": 12,
         "titulo": "Tablero de Bocetos y Evaluación",
-        "cat": "Visión Creativa",
+        "cat": "Diseño y Visión Creativa",
         "url": "https://drawrecogz.streamlit.app",
         "icon": "🎨",
         "svg_type": "creative",
-        "proposito": "Pizarra de dibujo digital con herramientas geométricas e interpretación de trazos asistida por IA.",
-        "codigo": "Entorno vectorial sobre Canvas con exportación rasterizada y evaluación estructural mediante modelos multimodales.",
-        "uso": "Prototipado rápido de diagramas, conceptualización y educación visual.",
-        "color": CATEGORY_PALETTE["Visión Creativa"]["color"]
+        "proposito": "Pizarra de bosquejado técnico y artístico con evaluación automática del trazo mediante modelos de lenguaje.",
+        "codigo": "Lienzo vectorial en Canvas, exportación de mapas de bits sin pérdidas y evaluación visual con GPT-4o-mini.",
+        "uso": "Prototipado ágil de interfaces, dinámicas de conceptualización gráfica y talleres educativos.",
+        "color": CATEGORY_PALETTE["Diseño y Visión Creativa"]["color"]
     },
     {
         "id": 13,
         "titulo": "Consulta Documental PDF (RAG)",
-        "cat": "Texto y Documentos",
+        "cat": "Modelos de Lenguaje (RAG)",
         "url": "https://chatpdfz.streamlit.app",
         "icon": "💬",
         "svg_type": "text",
-        "proposito": "Extracción y resolución de consultas precisas sobre documentos PDF técnicos o contractuales.",
-        "codigo": "Segmentación textual, generación de vectores semánticos, búsqueda de similitud con FAISS y respuesta con GPT-4o-mini.",
-        "uso": "Revisión ágil de manuales de ingeniería, pliegos contractuales e informes de investigación.",
-        "color": CATEGORY_PALETTE["Texto y Documentos"]["color"]
+        "proposito": "Extracción y resolución de consultas precisas sobre expedientes PDF extensos mediante recuperación vectorial.",
+        "codigo": "Chunking jerárquico, cálculo de embeddings en OpenAI, indexación de similitud con FAISS y síntesis fundamentada.",
+        "uso": "Auditoría de pliegos contractuales, estudio de manuales de ingeniería y síntesis de literatura científica.",
+        "color": CATEGORY_PALETTE["Modelos de Lenguaje (RAG)"]["color"]
     },
     {
         "id": 14,
         "titulo": "Analizador Tonal de Mensajes",
-        "cat": "Texto y Semántica",
+        "cat": "Procesamiento de Lenguaje",
         "url": "https://textanalysiz.streamlit.app",
         "icon": "⚖️",
         "svg_type": "text",
-        "proposito": "Evaluación del tono formal, neutralidad y sesgo subjetivo en comunicaciones escritas antes de su envío.",
-        "codigo": "Análisis léxico con reglas gramaticales para modificadores e intensificadores, con gráficos de dispersión de sentimiento.",
-        "uso": "Moderación de comunicaciones corporativas, atención al cliente y redacción técnica.",
-        "color": CATEGORY_PALETTE["Texto y Semántica"]["color"]
+        "proposito": "Diagnóstico de neutralidad, carga subjetiva y polaridad emocional en redacción corporativa antes de su envío.",
+        "codigo": "Algoritmo léxico en español con más de 40 reglas para cuantificadores, negaciones y trazado visual con Plotly.",
+        "uso": "Supervisión de comunicaciones corporativas, mediación en servicio al cliente y redacción técnica.",
+        "color": CATEGORY_PALETTE["Procesamiento de Lenguaje"]["color"]
     },
     {
         "id": 15,
         "titulo": "Modelador de Sistemas Físicos",
-        "cat": "Redes y Física",
+        "cat": "Modelado Físico y Tensor",
         "url": "https://histinfz.streamlit.app",
         "icon": "⚡",
         "svg_type": "neural",
-        "proposito": "Esquematización de diagramas mecánicos y deducción de ecuaciones de equilibrio de fuerzas.",
-        "codigo": "Reconocimiento geométrico de diagramas de cuerpo libre y deducción de condiciones estáticas acopladas.",
-        "uso": "Enseñanza de física aplicada y validación conceptual de mecanismos simples.",
-        "color": CATEGORY_PALETTE["Redes y Física"]["color"]
+        "proposito": "Esquematización técnica de mecanismos, poleas y palancas con deducción de ecuaciones de equilibrio estático.",
+        "codigo": "Reconocimiento geométrico asistido por visión artificial, acoplamiento de momentos y formulación analítica.",
+        "uso": "Validación de prototipos mecánicos iniciales y pedagogía en ciencias físicas e ingeniería.",
+        "color": CATEGORY_PALETTE["Modelado Físico y Tensor"]["color"]
     },
     {
         "id": 16,
         "titulo": "Generador de Relatos Ilustrados",
-        "cat": "Visión Creativa",
+        "cat": "Diseño y Visión Creativa",
         "url": "https://ejemplohistinfz.streamlit.app",
         "icon": "📖",
         "svg_type": "creative",
-        "proposito": "Elaboración de narrativas breves y estructuradas a partir de bocetos e ilustraciones ingresadas.",
-        "codigo": "Procesamiento de bosquejos gráficos y estructuración de historias en tres actos con modelos de lenguaje natural.",
-        "uso": "Fomento a la lectura, dinámicas educativas y ejercicios de expresión temprana.",
-        "color": CATEGORY_PALETTE["Visión Creativa"]["color"]
+        "proposito": "Transformación de bocetos manuales en narrativas literarias infantiles estructuradas con sentido pedagógico.",
+        "codigo": "Vectorización y limpieza de bocetos, articulación de trama en tres actos con GPT-4o-mini en español neutro.",
+        "uso": "Fomento lector en etapas escolares primarias, dinámicas lúdicas y fomento de expresión temprana.",
+        "color": CATEGORY_PALETTE["Diseño y Visión Creativa"]["color"]
+    },
+    {
+        "id": 17,
+        "titulo": "Telemetría y Monitor IoT",
+        "cat": "Sistemas IoT y Telemetría",
+        "url": "https://receptz.streamlit.app",
+        "icon": "📡",
+        "svg_type": "iot",
+        "proposito": "Monitor en tiempo real de temperatura, humedad, presión y tiempo activo sincronizado con gemelo digital en Wokwi.",
+        "codigo": "Pasarela persistente en segundo plano mediante Paho MQTT, deserialización de tramas JSON y actualización en memoria.",
+        "uso": "Supervisión de estaciones meteorológicas, salas de servidores y monitoreo de confort higrotérmico.",
+        "color": CATEGORY_PALETTE["Sistemas IoT y Telemetría"]["color"]
+    },
+    {
+        "id": 18,
+        "titulo": "Controlador de Actuadores IoT",
+        "cat": "Actuación Ciberfísica",
+        "url": "https://sendcmqttz.streamlit.app",
+        "icon": "⚡",
+        "svg_type": "iot",
+        "proposito": "Consola remota para gobierno de hardware: conmutación digital de matrices LED y posicionamiento de servomotores (0°-180°).",
+        "codigo": "Despacho asíncrono sobre socket persistente hacia nodo ESP32, bitácora de auditoría y gemelo digital incrustado.",
+        "uso": "Domótica distribuida, control de compuertas y conmutación de potencia en entornos de laboratorio.",
+        "color": CATEGORY_PALETTE["Actuación Ciberfísica"]["color"]
+    },
+    {
+        "id": 19,
+        "titulo": "Control por Voz para IoT",
+        "cat": "Interfaces Vocales IoT",
+        "url": "https://ctrlvoicez.streamlit.app",
+        "icon": "🎙️",
+        "svg_type": "audio",
+        "proposito": "Comando manos libres en lenguaje natural que transforma órdenes de voz en acciones físicas sobre microcontroladores.",
+        "codigo": "Captura en cliente por Web Speech API, enrutador semántico de intención y publicación inmediata de tópicos MQTT.",
+        "uso": "Accesibilidad para operarios en líneas de montaje, cabinas de control y automatización sin contacto.",
+        "color": CATEGORY_PALETTE["Interfaces Vocales IoT"]["color"]
     }
 ]
 
-# ============================================================
-# ESTILOS CSS: TONOS AZULES, PÚRPURAS Y PLATEADOS
-# ============================================================
+# ==============================================================================
+# 5. ESTILOS CSS REFINADOS (GALAXY & PLATINUM)
+# ==============================================================================
 render_clean_html("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
@@ -260,15 +297,15 @@ html, body, [data-testid="stAppViewContainer"], .stApp {
 }
 
 body {
-    background-color: #060913 !important;
+    background-color: #050811 !important;
 }
 
 [data-testid="stHeader"] { background: transparent !important; }
 [data-testid="stSidebar"], section[data-testid="stSidebar"] { display: none !important; }
 
 .block-container {
-    max-width: 1200px !important;
-    padding-top: 1.2rem !important;
+    max-width: 1260px !important;
+    padding-top: 1rem !important;
     padding-bottom: 3.5rem !important;
     margin: 0 auto !important;
     position: relative;
@@ -279,8 +316,8 @@ body {
     text-align: center;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.74rem;
-    letter-spacing: 0.24em;
-    color: #cbd5e1; /* Plata suave */
+    letter-spacing: 0.28em;
+    color: #cbd5e1;
     text-transform: uppercase;
 }
 
@@ -292,53 +329,53 @@ body {
     line-height: 1.15;
     margin: 0.4rem 0 0.3rem 0;
     letter-spacing: -0.02em;
-    text-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
+    text-shadow: 0 0 25px rgba(99, 102, 241, 0.25);
 }
 
 .sub-lead {
     text-align: center;
     color: #94a3b8;
     font-size: 0.95rem;
-    max-width: 740px;
+    max-width: 760px;
     margin: 0 auto 1.4rem auto;
     line-height: 1.55;
 }
 
-/* Indicadores de métrica con variedad de tonalidades */
+/* Indicadores de Auditoría */
 .stat-pill {
     border-radius: 8px;
-    padding: 10px 12px;
+    padding: 10px 14px;
     text-align: center;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
 }
 
 .stat-pill-silver {
-    background: rgba(15, 23, 42, 0.94);
-    border: 1px solid rgba(203, 213, 225, 0.25);
+    background: rgba(14, 20, 36, 0.94);
+    border: 1px solid rgba(203, 213, 225, 0.28);
 }
 
 .stat-pill-cyan {
     background: rgba(10, 20, 42, 0.94);
-    border: 1px solid rgba(56, 189, 248, 0.3);
+    border: 1px solid rgba(56, 189, 248, 0.32);
 }
 
 .stat-pill-purple {
     background: rgba(18, 14, 38, 0.94);
-    border: 1px solid rgba(168, 85, 247, 0.3);
+    border: 1px solid rgba(168, 85, 247, 0.32);
 }
 
 .stat-pill-sapphire {
     background: rgba(12, 18, 44, 0.94);
-    border: 1px solid rgba(96, 165, 250, 0.3);
+    border: 1px solid rgba(96, 165, 250, 0.32);
 }
 
-/* Barra de progreso cósmica fluida */
+/* Barra de Progreso Líquida */
 .lava-progress-frame {
     background: rgba(10, 16, 32, 0.94);
     border: 1px solid rgba(203, 213, 225, 0.2);
     border-radius: 30px;
     padding: 6px 14px;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.4rem;
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
 }
 
@@ -365,7 +402,7 @@ body {
     100% { background-position: 260% 50%; }
 }
 
-/* Tarjeta Principal */
+/* Tarjeta Principal del Carrusel */
 .carousel-card {
     background: linear-gradient(145deg, rgba(12, 18, 38, 0.96) 0%, rgba(7, 10, 22, 0.98) 100%);
     border: 1px solid rgba(203, 213, 225, 0.18);
@@ -412,9 +449,9 @@ body {
 .visited-badge {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.72rem;
-    color: #38bdf8;
-    background: rgba(56, 189, 248, 0.12);
-    border: 1px solid rgba(56, 189, 248, 0.35);
+    color: #2dd4bf;
+    background: rgba(45, 212, 191, 0.12);
+    border: 1px solid rgba(45, 212, 191, 0.35);
     border-radius: 6px;
     padding: 3px 9px;
 }
@@ -445,7 +482,7 @@ body {
 
 .code-box {
     background: rgba(4, 7, 18, 0.75);
-    border-left: 3px solid #cbd5e1; /* Plata */
+    border-left: 3px solid #cbd5e1;
     border-radius: 6px;
     padding: 10px 14px;
     font-size: 0.9rem;
@@ -462,7 +499,7 @@ body {
     line-height: 1.55;
 }
 
-/* Botones de navegación */
+/* Botones de Control */
 div.stButton > button {
     border-radius: 6px !important;
     font-family: 'JetBrains Mono', monospace !important;
@@ -481,13 +518,13 @@ div.stButton > button:hover {
     box-shadow: 0 0 16px rgba(56, 189, 248, 0.35) !important;
 }
 
-/* Botón de enlace a la app */
+/* Enlaces Directos */
 div[data-testid="stLinkButton"] > a {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     width: 100% !important;
-    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 35%, #7c3aed 70%, #c084fc 100%) !important;
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 40%, #7c3aed 75%, #c084fc 100%) !important;
     color: #ffffff !important;
     font-family: 'JetBrains Mono', monospace !important;
     font-weight: 600 !important;
@@ -505,7 +542,7 @@ div[data-testid="stLinkButton"] > a:hover {
     transform: translateY(-1px) !important;
 }
 
-/* Directorio de tarjetas con variedad cromática */
+/* Matriz de Aplicaciones */
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -548,9 +585,9 @@ div[data-testid="stLinkButton"] > a:hover {
 </style>
 """)
 
-# ============================================================
-# CANVAS CÓSMICO CON ORBES Y POLVO DE ESTRELLAS PLATEADO
-# ============================================================
+# ==============================================================================
+# 6. CANVAS GPU CÓSMICO (PARTÍCULAS AZUL, PÚRPURA Y PLATINO)
+# ==============================================================================
 components.html(
     """
     <script>
@@ -564,7 +601,7 @@ components.html(
         if (!canvas) {
             canvas = pDoc.createElement('canvas');
             canvas.id = 'galaxy-blue-canvas';
-            canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;background:#060913;';
+            canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;background:#050811;';
             pDoc.body.prepend(canvas);
         }
 
@@ -578,16 +615,14 @@ components.html(
             h = canvas.height = Math.floor(pWin.innerHeight * scale);
         });
 
-        // Orbes equilibrados: Azules, Púrpuras y Platino
         const orbs = [
-            { x: w * 0.15, y: h * 0.25, r: 180 * scale, vx: 0.5, vy: 0.4, color: 'rgba(37, 99, 235, 0.22)' },   // Zafiro
-            { x: w * 0.85, y: h * 0.35, r: 200 * scale, vx: -0.4, vy: 0.5, color: 'rgba(56, 189, 248, 0.20)' },  // Celeste
-            { x: w * 0.5,  y: h * 0.85, r: 170 * scale, vx: 0.4, vy: -0.5, color: 'rgba(124, 58, 237, 0.20)' },  // Violeta
-            { x: w * 0.2,  y: h * 0.75, r: 160 * scale, vx: -0.4, vy: -0.4, color: 'rgba(192, 132, 252, 0.16)' }, // Lavanda
-            { x: w * 0.75, y: h * 0.8,  r: 150 * scale, vx: 0.3, vy: -0.3, color: 'rgba(226, 232, 240, 0.10)' }  // Platino
+            { x: w * 0.15, y: h * 0.25, r: 180 * scale, vx: 0.5, vy: 0.4, color: 'rgba(37, 99, 235, 0.22)' },
+            { x: w * 0.85, y: h * 0.35, r: 200 * scale, vx: -0.4, vy: 0.5, color: 'rgba(56, 189, 248, 0.20)' },
+            { x: w * 0.5,  y: h * 0.85, r: 170 * scale, vx: 0.4, vy: -0.5, color: 'rgba(124, 58, 237, 0.20)' },
+            { x: w * 0.2,  y: h * 0.75, r: 160 * scale, vx: -0.4, vy: -0.4, color: 'rgba(192, 132, 252, 0.16)' },
+            { x: w * 0.75, y: h * 0.8,  r: 150 * scale, vx: 0.3, vy: -0.3, color: 'rgba(203, 213, 225, 0.10)' }
         ];
 
-        // Partículas variadas (Plata, Azules y Púrpuras)
         const pColors = ['#38bdf8', '#818cf8', '#c084fc', '#93c5fd', '#e2e8f0', '#a78bfa', '#60a5fa'];
         const pCount = pWin.innerWidth < 768 ? 18 : 28;
         const particles = [];
@@ -603,7 +638,7 @@ components.html(
         }
 
         function loop() {
-            ctx.fillStyle = '#060913';
+            ctx.fillStyle = '#050811';
             ctx.fillRect(0, 0, w, h);
 
             ctx.globalCompositeOperation = 'screen';
@@ -615,7 +650,7 @@ components.html(
 
                 const g = ctx.createRadialGradient(b.x, b.y, 2, b.x, b.y, b.r);
                 g.addColorStop(0, b.color);
-                g.addColorStop(1, 'rgba(6, 9, 19, 0)');
+                g.addColorStop(1, 'rgba(5, 8, 17, 0)');
                 ctx.beginPath();
                 ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
                 ctx.fillStyle = g;
@@ -637,7 +672,6 @@ components.html(
                 ctx.fillStyle = p.color;
                 ctx.fill();
 
-                // Conexiones de malla láser plateado-azuladas
                 for (let j = i + 1; j < particles.length; j++) {
                     const p2 = particles[j];
                     const dx = p.x - p2.x;
@@ -665,9 +699,9 @@ components.html(
     width=0
 )
 
-# ============================================================
-# ELEMENTOS VECTORIALES HUD
-# ============================================================
+# ==============================================================================
+# 7. GENERADORES VECTORIALES HUD (INCLUYENDO NODO IOT)
+# ==============================================================================
 def generar_svg_emblema():
     return """
     <div style="display:flex; justify-content:center; align-items:center; margin-bottom:8px;">
@@ -680,13 +714,9 @@ def generar_svg_emblema():
             @keyframes rCounter { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
             @keyframes rPulse { 0% { transform: scale(0.93); opacity: 0.85; } 100% { transform: scale(1.07); opacity: 1; } }
         </style>
-        <!-- Anillo exterior plateado -->
         <circle class="spin-cw" cx="50" cy="50" r="44" fill="none" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="10 6 3 6" opacity="0.85"/>
-        <!-- Anillo intermedio azul celeste -->
         <circle class="spin-ccw" cx="50" cy="50" r="34" fill="none" stroke="#38bdf8" stroke-width="1.4" stroke-dasharray="8 5 12 5" opacity="0.9"/>
-        <!-- Polígono púrpura/violeta -->
         <polygon class="spin-cw" points="50,22 57,34 70,34 60,42 63,55 50,47 37,55 40,42 30,34 43,34" fill="none" stroke="#c084fc" stroke-width="1.1" opacity="0.8"/>
-        <!-- Núcleo platino con destello -->
         <g class="pulse-core">
             <circle cx="50" cy="50" r="13" fill="rgba(56,189,248,0.18)" stroke="#cbd5e1" stroke-width="1.6"/>
             <text x="50" y="54" font-size="13" font-family="'JetBrains Mono', monospace" font-weight="bold" fill="#ffffff" text-anchor="middle">✦</text>
@@ -696,8 +726,29 @@ def generar_svg_emblema():
     """
 
 def generar_svg_hud(tipo: str, color_hex: str):
-    # Combina el color temático de la app con toques de platino (#cbd5e1)
-    if tipo == "vision":
+    if tipo == "iot":
+        return f"""
+        <div style="background:rgba(8,14,30,0.96); border:1px solid {color_hex}55; border-radius:10px; padding:14px; text-align:center; box-shadow:0 6px 20px rgba(0,0,0,0.6);">
+            <div style="font-family:'JetBrains Mono'; font-size:0.68rem; color:{color_hex}; letter-spacing:0.16em; margin-bottom:6px;">NODO CIBERFÍSICO // MQTT</div>
+            <svg width="220" height="170" viewBox="0 0 220 170">
+                <style>
+                    .iot-pulse {{ animation: rPulse 1.8s ease-in-out infinite alternate; will-change: transform; }}
+                    .spin-rad {{ transform-origin: 110px 85px; animation: rClock 12s linear infinite; will-change: transform; }}
+                </style>
+                <circle cx="110" cy="85" r="62" fill="none" stroke="rgba(203,213,225,0.15)" stroke-width="1" stroke-dasharray="4 4"/>
+                <circle cx="110" cy="85" r="42" fill="none" stroke="{color_hex}" stroke-width="1.2" opacity="0.4"/>
+                <circle class="spin-rad" cx="110" cy="85" r="24" fill="none" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="8 6"/>
+                <path d="M 110 30 L 110 48" stroke="{color_hex}" stroke-width="2"/>
+                <path d="M 110 122 L 110 140" stroke="{color_hex}" stroke-width="2"/>
+                <path d="M 55 85 L 73 85" stroke="#cbd5e1" stroke-width="2"/>
+                <path d="M 147 85 L 165 85" stroke="#cbd5e1" stroke-width="2"/>
+                <circle class="iot-pulse" cx="110" cy="85" r="10" fill="none" stroke="{color_hex}" stroke-width="2"/>
+                <circle cx="110" cy="85" r="4" fill="#38bdf8"/>
+                <text x="110" y="156" font-family="'JetBrains Mono'" font-size="9" fill="#cbd5e1" text-anchor="middle">MQTT QOS 1 PERSISTENTE</text>
+            </svg>
+        </div>
+        """
+    elif tipo == "vision":
         return f"""
         <div style="background:rgba(8,14,30,0.96); border:1px solid {color_hex}55; border-radius:10px; padding:14px; text-align:center; box-shadow:0 6px 20px rgba(0,0,0,0.6);">
             <div style="font-family:'JetBrains Mono'; font-size:0.68rem; color:{color_hex}; letter-spacing:0.16em; margin-bottom:6px;">MODO ÓPTICO ACTIVO</div>
@@ -762,12 +813,12 @@ def generar_svg_hud(tipo: str, color_hex: str):
                 <line class="syn-fire" x1="40" y1="125" x2="110" y2="110" stroke="{color_hex}"/>
                 <line class="syn-fire" x1="110" y1="60" x2="180" y2="85" stroke="#38bdf8"/>
                 <line class="syn-fire" x1="110" y1="110" x2="180" y2="85" stroke="{color_hex}"/>
-                <circle cx="40" cy="45" r="7" fill="#060913" stroke="{color_hex}" stroke-width="1.8"/>
-                <circle cx="40" cy="85" r="7" fill="#060913" stroke="#cbd5e1" stroke-width="1.8"/>
-                <circle cx="40" cy="125" r="7" fill="#060913" stroke="{color_hex}" stroke-width="1.8"/>
-                <circle cx="110" cy="60" r="8" fill="#060913" stroke="#38bdf8" stroke-width="1.8"/>
-                <circle cx="110" cy="110" r="8" fill="#060913" stroke="{color_hex}" stroke-width="1.8"/>
-                <circle cx="180" cy="85" r="10" fill="#060913" stroke="#cbd5e1" stroke-width="2"/>
+                <circle cx="40" cy="45" r="7" fill="#050811" stroke="{color_hex}" stroke-width="1.8"/>
+                <circle cx="40" cy="85" r="7" fill="#050811" stroke="#cbd5e1" stroke-width="1.8"/>
+                <circle cx="40" cy="125" r="7" fill="#050811" stroke="{color_hex}" stroke-width="1.8"/>
+                <circle cx="110" cy="60" r="8" fill="#050811" stroke="#38bdf8" stroke-width="1.8"/>
+                <circle cx="110" cy="110" r="8" fill="#050811" stroke="{color_hex}" stroke-width="1.8"/>
+                <circle cx="180" cy="85" r="10" fill="#050811" stroke="#cbd5e1" stroke-width="2"/>
                 <text x="110" y="154" font-family="'JetBrains Mono'" font-size="9" fill="#cbd5e1" text-anchor="middle">MATRIZ CONVOLUCIONAL</text>
             </svg>
         </div>
@@ -784,9 +835,9 @@ def generar_svg_hud(tipo: str, color_hex: str):
                 <path class="data-flow" d="M 15 45 Q 70 20, 110 60 T 205 45" fill="none" stroke="{color_hex}" stroke-width="1.7"/>
                 <path class="data-flow" d="M 15 85 Q 70 120, 110 85 T 205 85" fill="none" stroke="#cbd5e1" stroke-width="1.7"/>
                 <path class="data-flow" d="M 15 125 Q 70 100, 110 115 T 205 125" fill="none" stroke="#38bdf8" stroke-width="1.7"/>
-                <circle cx="55" cy="35" r="5" fill="#060913" stroke="{color_hex}" stroke-width="1.8"/>
-                <circle cx="110" cy="85" r="7" fill="#060913" stroke="#cbd5e1" stroke-width="1.8"/>
-                <circle cx="165" cy="120" r="5" fill="#060913" stroke="#38bdf8" stroke-width="1.8"/>
+                <circle cx="55" cy="35" r="5" fill="#050811" stroke="{color_hex}" stroke-width="1.8"/>
+                <circle cx="110" cy="85" r="7" fill="#050811" stroke="#cbd5e1" stroke-width="1.8"/>
+                <circle cx="165" cy="120" r="5" fill="#050811" stroke="#38bdf8" stroke-width="1.8"/>
                 <text x="110" y="154" font-family="'JetBrains Mono'" font-size="9" fill="#cbd5e1" text-anchor="middle">ÍNDICE VECTORIAL</text>
             </svg>
         </div>
@@ -810,13 +861,13 @@ def generar_svg_hud(tipo: str, color_hex: str):
         </div>
         """
 
-# ============================================================
-# CABECERA Y MÉTRICAS GLOBALES
-# ============================================================
+# ==============================================================================
+# 8. CABECERA MAESTRA Y AUDITORÍA EN TIEMPO REAL
+# ==============================================================================
 render_clean_html(generar_svg_emblema())
-render_clean_html('<div class="brand-signature">Sistemas e Interfaces Interactivas</div>')
+render_clean_html('<div class="brand-signature">Sistemas e Interfaces Multimodales</div>')
 render_clean_html('<div class="main-title">Portafolio de Aplicaciones</div>')
-render_clean_html('<div class="sub-lead">16 soluciones prácticas en visión artificial, modelos de lenguaje, procesamiento acústico e interacción inteligente.</div>')
+render_clean_html('<div class="sub-lead">Catálogo de 19 desarrollos en visión por computador, modelos de lenguaje, interfaces ciberfísicas IoT y acústica aplicada.</div>')
 
 total_apps = len(CATALOGO)
 visitadas_count = len(st.session_state.visited_apps)
@@ -826,20 +877,21 @@ s1, s2, s3, s4 = st.columns(4)
 with s1:
     render_clean_html(f'<div class="stat-pill stat-pill-silver"><div style="font-size:0.68rem; color:#cbd5e1; font-family:\'JetBrains Mono\';">TOTAL APLICACIONES</div><div style="font-size:1.5rem; font-weight:700; color:#ffffff;">{total_apps}</div></div>')
 with s2:
-    render_clean_html(f'<div class="stat-pill stat-pill-cyan"><div style="font-size:0.68rem; color:#38bdf8; font-family:\'JetBrains Mono\';">EXPLORADAS</div><div style="font-size:1.5rem; font-weight:700; color:#38bdf8;">{visitadas_count} de {total_apps}</div></div>')
+    render_clean_html(f'<div class="stat-pill stat-pill-cyan"><div style="font-size:0.68rem; color:#38bdf8; font-family:\'JetBrains Mono\';">VERIFICADAS</div><div style="font-size:1.5rem; font-weight:700; color:#38bdf8;">{visitadas_count} de {total_apps}</div></div>')
 with s3:
     render_clean_html(f'<div class="stat-pill stat-pill-purple"><div style="font-size:0.68rem; color:#c084fc; font-family:\'JetBrains Mono\';">COBERTURA</div><div style="font-size:1.5rem; font-weight:700; color:#c084fc;">{progreso_pct}%</div></div>')
 with s4:
     categorias_unicas = len(set(a["cat"] for a in CATALOGO))
-    render_clean_html(f'<div class="stat-pill stat-pill-sapphire"><div style="font-size:0.68rem; color:#93c5fd; font-family:\'JetBrains Mono\';">ÁREAS TEMÁTICAS</div><div style="font-size:1.5rem; font-weight:700; color:#93c5fd;">{categorias_unicas}</div></div>')
+    render_clean_html(f'<div class="stat-pill stat-pill-sapphire"><div style="font-size:0.68rem; color:#93c5fd; font-family:\'JetBrains Mono\';">ÁREAS TÉCNICAS</div><div style="font-size:1.5rem; font-weight:700; color:#93c5fd;">{categorias_unicas}</div></div>')
 
 st.write("")
 
+# Barra de progreso líquida
 render_clean_html(f"""
 <div class="lava-progress-frame">
     <div style="display:flex; justify-content:space-between; font-family:'JetBrains Mono'; font-size:0.72rem; margin-bottom:5px; padding:0 4px;">
         <span style="color:#cbd5e1;">PROGRESO DE EXPLORACIÓN</span>
-        <span style="color:#38bdf8; font-weight:600;">{visitadas_count} de {total_apps} revisadas ({progreso_pct}%)</span>
+        <span style="color:#38bdf8; font-weight:600;">{visitadas_count} de {total_apps} verificadas ({progreso_pct}%)</span>
     </div>
     <div class="lava-progress-bar">
         <div class="lava-progress-fill" style="width: {max(5, progreso_pct)}%;"></div>
@@ -847,14 +899,14 @@ render_clean_html(f"""
 </div>
 """)
 
-# ============================================================
-# FILTRADO Y SELECTOR DIRECTO
-# ============================================================
+# ==============================================================================
+# 9. FILTRADO Y SELECTOR INTUITIVO
+# ==============================================================================
 c_search, c_filter = st.columns([1.5, 1], gap="medium")
 with c_search:
     termino_busqueda = st.text_input(
         "Buscar aplicación:",
-        placeholder="Ej: YOLO, OCR, voz, PDF, dibujo, MNIST...",
+        placeholder="Ej: YOLO, IoT, actuadores, voz, PDF, Wokwi, MNIST...",
         label_visibility="collapsed"
     )
 with c_filter:
@@ -893,11 +945,11 @@ if idx_seleccionado != st.session_state.carousel_idx:
     st.session_state.carousel_idx = idx_seleccionado
     st.rerun()
 
-# ============================================================
-# CARRUSEL CON DESCRIPCIÓN Y HUD
-# ============================================================
+# ==============================================================================
+# 10. FICHA TÉCNICA PRINCIPAL Y HUD INTERACTIVO
+# ==============================================================================
 badge_visita_html = (
-    '<span class="visited-badge">✓ Revisada</span>'
+    '<span class="visited-badge">✓ Verificada</span>'
     if esta_visitada
     else '<span style="font-family:\'JetBrains Mono\'; font-size:0.72rem; color:#cbd5e1; background:rgba(203,213,225,0.08); padding:3px 8px; border-radius:6px; border:1px solid rgba(203,213,225,0.2);">○ Pendiente</span>'
 )
@@ -913,19 +965,19 @@ with col_desc:
                     {app_actual['icon']} {app_actual['cat']}
                 </span>
                 <span class="id-badge">
-                    ÍTEM #{app_actual['id']:02d} DE {total_apps:02d}
+                    APLICACIÓN #{app_actual['id']:02d} DE {total_apps:02d}
                 </span>
             </div>
             <div>{badge_visita_html}</div>
         </div>
         <div class="card-title">{app_actual['titulo']}</div>
-        <div class="section-label" style="color:{app_actual['color']};">Descripción</div>
+        <div class="section-label" style="color:{app_actual['color']};">Descripción Funcional</div>
         <div class="section-text">{app_actual['proposito']}</div>
-        <div class="section-label" style="color:#cbd5e1;">Arquitectura y Métodos</div>
+        <div class="section-label" style="color:#cbd5e1;">Arquitectura Subyacente</div>
         <div class="code-box">⚙️ {app_actual['codigo']}</div>
-        <div class="section-label" style="color:{app_actual['color']};">Casos de Uso</div>
+        <div class="section-label" style="color:{app_actual['color']};">Impacto Operativo</div>
         <div class="use-box" style="background:{app_actual['color']}12; border-left:3px solid {app_actual['color']};">
-            💡 <b>Aplicación práctica:</b> {app_actual['uso']}
+            💡 <b>Uso práctico:</b> {app_actual['uso']}
         </div>
     </div>
     """
@@ -934,6 +986,7 @@ with col_desc:
 with col_hud:
     render_clean_html(generar_svg_hud(app_actual["svg_type"], app_actual["color"]))
 
+# Controles de Flujo de Verificación
 col_ant, col_visitar, col_toggle, col_sig = st.columns([1, 1.6, 1.4, 1], gap="small")
 
 with col_ant:
@@ -945,7 +998,7 @@ with col_visitar:
     st.link_button(f"Abrir {app_actual['titulo'].split()[0]} ↗", app_actual["url"], use_container_width=True)
 
 with col_toggle:
-    btn_lbl = "✓ Desmarcar" if esta_visitada else "Marcar como revisada"
+    btn_lbl = "✓ Desmarcar" if esta_visitada else "Marcar como verificada"
     if st.button(btn_lbl, use_container_width=True):
         if esta_visitada:
             st.session_state.visited_apps.remove(app_actual["id"])
@@ -961,20 +1014,20 @@ with col_sig:
 st.write("")
 st.divider()
 
-# ============================================================
-# DIRECTORIO GENERAL COMPLETO (CUADRÍCULA CROMÁTICA)
-# ============================================================
-st.markdown("### Directorio de Acceso Directo")
+# ==============================================================================
+# 11. MATRIZ GENERAL COMPLETA (19 APLICACIONES)
+# ==============================================================================
+st.markdown("### Directorio de Acceso y Evaluación")
 st.markdown(
-    "<p style='color:#cbd5e1; font-size:0.88rem; margin-top:-8px;'>Identificación por categoría mediante tonalidades de azul, púrpura y plateado.</p>",
+    "<p style='color:#cbd5e1; font-size:0.88rem; margin-top:-8px;'>Navegación directa con codificación cromática en gamas fría y platino.</p>",
     unsafe_allow_html=True
 )
 
 grid_cards_html = ['<div class="grid-container">']
 for item in CATALOGO:
     item_visitado = item["id"] in st.session_state.visited_apps
-    simbolo_visita = "✓ Revisada" if item_visitado else "○ Pendiente"
-    color_visita = "#38bdf8" if item_visitado else "#94a3b8"
+    simbolo_visita = "✓ Verificada" if item_visitado else "○ Pendiente"
+    color_visita = "#2dd4bf" if item_visitado else "#94a3b8"
 
     grid_cards_html.append(f"""
     <div class="grid-card" style="border-top-color:{item['color']};">
@@ -1006,7 +1059,7 @@ render_clean_html("""
         PORTAFOLIO DE SISTEMAS E INTERFACES MULTIMODALES
     </div>
     <div style="font-size:0.8rem; color:#64748b; margin-top:4px;">
-        16 aplicaciones desplegadas sobre Streamlit Cloud
+        19 aplicaciones desplegadas sobre Streamlit Cloud
     </div>
 </div>
 """)
