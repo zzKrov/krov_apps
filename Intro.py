@@ -6,7 +6,7 @@ import json
 # 1. CONFIGURACIÓN GENERAL Y FAVICON
 # ==============================================================================
 st.set_page_config(
-    page_title="Portafolio // Sistemas e Interfaces Multimodales",
+    page_title="Portafolio // Auditoría de Sistemas Multimodales",
     page_icon="💠",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -50,7 +50,7 @@ CATALOGO = [
         "icon": "✍️",
         "svg_type": "neural",
         "desc": "Reconocimiento y clasificación de números manuscritos del 0 al 9 sobre lienzo.",
-        "uso": "Digitalización automática de formularios y cheques bancarios.",
+        "uso": "Digitalización automática de formularios y comprobantes bancarios.",
         "color": "#8b5cf6"
     },
     {
@@ -234,7 +234,7 @@ CATALOGO = [
 APPS_JSON = json.dumps(CATALOGO)
 
 # ==============================================================================
-# 3. ESTILOS BASE Y AMBIENTACIÓN CÓSMICA
+# 3. ESTILOS BASE Y CONTENEDOR MAESTRO
 # ==============================================================================
 render_clean_html("""
 <style>
@@ -256,7 +256,7 @@ body {
 [data-testid="stSidebar"], section[data-testid="stSidebar"] { display: none !important; }
 
 .block-container {
-    max-width: 1360px !important;
+    max-width: 1380px !important;
     padding-top: 0.8rem !important;
     padding-bottom: 2rem !important;
     margin: 0 auto !important;
@@ -264,7 +264,7 @@ body {
 
 .header-deck {
     text-align: center;
-    margin-bottom: 1.2rem;
+    margin-bottom: 0.8rem;
 }
 
 .brand-label {
@@ -276,7 +276,7 @@ body {
 }
 
 .hero-title {
-    font-size: clamp(1.8rem, 3.2vw, 2.7rem);
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
     font-weight: 700;
     color: #ffffff;
     line-height: 1.2;
@@ -287,7 +287,7 @@ body {
 
 .hero-sub {
     color: #94a3b8;
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     max-width: 680px;
     margin: 0 auto;
 }
@@ -333,120 +333,22 @@ body {
 """)
 
 # ==============================================================================
-# 4. CANVAS GPU DE ALTA EFICIENCIA (FONDO PLASMA NEÓN)
-# ==============================================================================
-components.html(
-    """
-    <script>
-    (function() {
-        const pWin = window.parent;
-        const pDoc = pWin.document;
-        if (pWin.__GALAXY_BG_ACTIVE__) return;
-        pWin.__GALAXY_BG_ACTIVE__ = true;
-
-        let canvas = pDoc.getElementById('galaxy-blue-canvas');
-        if (!canvas) {
-            canvas = pDoc.createElement('canvas');
-            canvas.id = 'galaxy-blue-canvas';
-            canvas.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0;background:#04060d;';
-            pDoc.body.prepend(canvas);
-        }
-
-        const ctx = canvas.getContext('2d', { alpha: false });
-        const scale = pWin.innerWidth < 768 ? 0.45 : 0.65;
-        let w = canvas.width = Math.floor(pWin.innerWidth * scale);
-        let h = canvas.height = Math.floor(pWin.innerHeight * scale);
-
-        pWin.addEventListener('resize', () => {
-            w = canvas.width = Math.floor(pWin.innerWidth * scale);
-            h = canvas.height = Math.floor(pWin.innerHeight * scale);
-        });
-
-        const orbs = [
-            { x: w * 0.15, y: h * 0.25, r: 190 * scale, vx: 0.35, vy: 0.25, color: 'rgba(37, 99, 235, 0.25)' },
-            { x: w * 0.85, y: h * 0.35, r: 210 * scale, vx: -0.3, vy: 0.35, color: 'rgba(56, 189, 248, 0.22)' },
-            { x: w * 0.5,  y: h * 0.85, r: 180 * scale, vx: 0.25, vy: -0.3, color: 'rgba(124, 58, 237, 0.20)' }
-        ];
-
-        const pColors = ['#38bdf8', '#818cf8', '#c084fc', '#93c5fd', '#cbd5e1'];
-        const pCount = pWin.innerWidth < 768 ? 14 : 22;
-        const particles = [];
-        for (let i = 0; i < pCount; i++) {
-            particles.push({
-                x: Math.random() * w,
-                y: Math.random() * h,
-                r: Math.random() * 1.5 + 0.6,
-                vx: (Math.random() - 0.5) * 0.4,
-                vy: (Math.random() - 0.5) * 0.4,
-                color: pColors[i % pColors.length]
-            });
-        }
-
-        function loop() {
-            ctx.fillStyle = '#04060d';
-            ctx.fillRect(0, 0, w, h);
-
-            ctx.globalCompositeOperation = 'screen';
-            for (let b of orbs) {
-                b.x += b.vx;
-                b.y += b.vy;
-                if (b.x < -40 || b.x > w + 40) b.vx *= -1;
-                if (b.y < -40 || b.y > h + 40) b.vy *= -1;
-
-                const g = ctx.createRadialGradient(b.x, b.y, 2, b.x, b.y, b.r);
-                g.addColorStop(0, b.color);
-                g.addColorStop(1, 'rgba(4, 6, 13, 0)');
-                ctx.beginPath();
-                ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-                ctx.fillStyle = g;
-                ctx.fill();
-            }
-
-            ctx.globalCompositeOperation = 'lighter';
-            for (let i = 0; i < particles.length; i++) {
-                const p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                if (p.x < 0) p.x = w;
-                if (p.x > w) p.x = 0;
-                if (p.y < 0) p.y = h;
-                if (p.y > h) p.y = 0;
-
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
-                ctx.fill();
-            }
-
-            ctx.globalCompositeOperation = 'source-over';
-            requestAnimationFrame(loop);
-        }
-        loop();
-    })();
-    </script>
-    """,
-    height=0,
-    width=0
-)
-
-# ==============================================================================
-# 5. ENCABEZADO Y AUDITORÍA MAESTRA
+# 4. ENCABEZADO Y PESTAÑAS PRINCIPALES
 # ==============================================================================
 render_clean_html("""
 <div class="header-deck">
-    <div class="brand-label">Portafolio de Sistemas</div>
-    <div class="hero-title">Interfaces Multimodales</div>
-    <div class="hero-sub">19 aplicaciones de visión artificial, modelos de lenguaje, telemetría IoT y acústica.</div>
+    <div class="brand-label">Portafolio Profesional // Auditoría Técnica</div>
+    <div class="hero-title">Sistemas e Interfaces Multimodales</div>
+    <div class="hero-sub">Colección de 19 desarrollos en visión artificial, modelos de lenguaje, telemetría IoT y acústica.</div>
 </div>
 """)
 
-tab_estacion, tab_matriz = st.tabs(["Estación de Inspección Paternoster", "Directorio Completo"])
+tab_estacion, tab_matriz = st.tabs(["Estación de Auditoría Paternoster", "Directorio Completo"])
 
 # ==============================================================================
-# PESTAÑA 1: PATERNOSTER DRAGGABLE SHELF + WORKSTATION LATERAL
+# PESTAÑA 1: PATERNOSTER INFINITO + ESTACIÓN DE TRABAJO
 # ==============================================================================
 with tab_estacion:
-    # Componente integrado de alta reactividad con física de arrastre y eyección de botón
     components.html(
         f"""
         <!DOCTYPE html>
@@ -465,12 +367,91 @@ with tab_estacion:
                 height: 100%;
             }}
 
+            /* --- ESTADO FINAL PSICODÉLICO / HIPNÓTICO (19/19 VERIFICADAS) --- */
+            body.hyperspace-active {{
+                animation: chromaticHypnosis 6s linear infinite alternate;
+            }}
+
+            @keyframes chromaticHypnosis {{
+                0% {{ filter: hue-rotate(0deg) saturate(1.8); }}
+                50% {{ filter: hue-rotate(180deg) saturate(2.4); }}
+                100% {{ filter: hue-rotate(360deg) saturate(1.8); }}
+            }}
+
+            /* --- BARRA DE PROGRESO LÍQUIDA --- */
+            .audit-header-bar {{
+                background: rgba(10, 16, 32, 0.95);
+                border: 1px solid rgba(203, 213, 225, 0.18);
+                border-radius: 20px;
+                padding: 8px 18px;
+                margin-bottom: 12px;
+                box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }}
+
+            .audit-bar-top {{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.74rem;
+            }}
+
+            .progress-track {{
+                width: 100%;
+                height: 7px;
+                background: rgba(255, 255, 255, 0.08);
+                border-radius: 6px;
+                overflow: hidden;
+                position: relative;
+            }}
+
+            .progress-fill {{
+                height: 100%;
+                background: linear-gradient(90deg, #1d4ed8, #3b82f6, #38bdf8, #818cf8, #c084fc, #1d4ed8);
+                background-size: 260% 100%;
+                animation: liquidStream 4s linear infinite;
+                border-radius: 6px;
+                transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+                box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+            }}
+
+            @keyframes liquidStream {{
+                0% {{ background-position: 0% 50%; }}
+                100% {{ background-position: 260% 50%; }}
+            }}
+
+            /* BANNER DE AUDITORÍA COMPLETA */
+            .celebration-banner {{
+                display: none;
+                text-align: center;
+                background: linear-gradient(90deg, rgba(56,189,248,0.2), rgba(192,132,252,0.3), rgba(45,212,191,0.2));
+                border: 1px solid #38bdf8;
+                border-radius: 8px;
+                padding: 6px;
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 0.76rem;
+                font-weight: 700;
+                color: #ffffff;
+                letter-spacing: 0.15em;
+                margin-bottom: 10px;
+                box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+                animation: pulseGlow 1.8s infinite alternate;
+            }}
+
+            @keyframes pulseGlow {{
+                0% {{ box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }}
+                100% {{ box-shadow: 0 0 35px rgba(192, 132, 252, 0.9); }}
+            }}
+
+            /* --- CONTENEDOR PRINCIPAL MASTER-DETAIL --- */
             .deck-wrapper {{
                 display: flex;
                 gap: 24px;
                 width: 100%;
-                height: 620px;
-                padding: 6px;
+                height: 600px;
             }}
 
             /* --- ESTANTE PATERNOSTER ENSANCHADO --- */
@@ -491,11 +472,11 @@ with tab_estacion:
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 12px;
-                padding-bottom: 10px;
+                margin-bottom: 10px;
+                padding-bottom: 8px;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.08);
                 font-family: 'JetBrains Mono', monospace;
-                font-size: 0.74rem;
+                font-size: 0.72rem;
             }}
 
             .paternoster-viewport {{
@@ -510,6 +491,7 @@ with tab_estacion:
                 cursor: grabbing;
             }}
 
+            /* Apertura central con resplandor cian */
             .paternoster-aperture {{
                 position: absolute;
                 top: 50%;
@@ -521,36 +503,30 @@ with tab_estacion:
                 border-left: 4px solid #38bdf8;
                 border-radius: 10px;
                 pointer-events: none;
-                box-shadow: 0 0 25px rgba(56, 189, 248, 0.2), inset 0 0 15px rgba(56, 189, 248, 0.1);
+                box-shadow: 0 0 25px rgba(56, 189, 248, 0.25), inset 0 0 15px rgba(56, 189, 248, 0.1);
                 z-index: 2;
             }}
 
-            .paternoster-track {{
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                will-change: transform;
-            }}
-
             .shelf-card {{
-                position: relative;
+                position: absolute;
+                left: 0;
+                right: 0;
                 height: 86px;
-                margin-bottom: 10px;
-                background: rgba(12, 19, 38, 0.88);
+                background: rgba(12, 19, 38, 0.92);
                 border: 1px solid rgba(255, 255, 255, 0.08);
                 border-radius: 8px;
-                padding: 12px 16px;
+                padding: 12px 18px;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                transition: opacity 0.15s ease, transform 0.15s ease, filter 0.15s ease;
+                transition: opacity 0.15s ease, filter 0.15s ease;
                 transform-origin: center center;
+                will-change: transform, opacity;
             }}
 
             .shelf-card-info {{
                 flex: 1;
-                padding-right: 12px;
+                padding-right: 14px;
             }}
 
             .shelf-card-title {{
@@ -563,7 +539,7 @@ with tab_estacion:
             }}
 
             .shelf-card-desc {{
-                font-size: 0.8rem;
+                font-size: 0.78rem;
                 color: #94a3b8;
                 margin-top: 3px;
                 white-space: nowrap;
@@ -571,7 +547,7 @@ with tab_estacion:
                 text-overflow: ellipsis;
             }}
 
-            /* --- BOTÓN «VER» EYECTADO LATERALMENTE --- */
+            /* --- BOTÓN «VER» CON EYECCIÓN LATERAL RETARDADA --- */
             .ejected-btn {{
                 position: absolute;
                 right: -6px;
@@ -590,7 +566,7 @@ with tab_estacion:
                 letter-spacing: 0.08em;
                 cursor: pointer;
                 box-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
-                transition: transform 0.24s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s ease;
+                transition: transform 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.22s ease;
                 z-index: 10;
             }}
 
@@ -612,7 +588,7 @@ with tab_estacion:
                 border: 1px solid rgba(56, 189, 248, 0.28);
                 border-top: 3px solid #38bdf8;
                 border-radius: 14px;
-                padding: 24px;
+                padding: 22px;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
@@ -624,7 +600,7 @@ with tab_estacion:
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 8px;
+                margin-bottom: 6px;
             }}
 
             .chip-cat {{
@@ -640,25 +616,25 @@ with tab_estacion:
             }}
 
             .workstation-title {{
-                font-size: 1.65rem;
+                font-size: 1.6rem;
                 font-weight: 700;
                 color: #ffffff;
-                margin: 4px 0 8px 0;
+                margin: 4px 0 6px 0;
             }}
 
             .workstation-desc {{
-                font-size: 0.94rem;
+                font-size: 0.92rem;
                 color: #cbd5e1;
                 line-height: 1.5;
-                margin-bottom: 12px;
+                margin-bottom: 10px;
             }}
 
             .workstation-box {{
                 background: rgba(56, 189, 248, 0.06);
                 border-left: 3px solid #38bdf8;
                 border-radius: 6px;
-                padding: 10px 14px;
-                margin-bottom: 14px;
+                padding: 9px 12px;
+                margin-bottom: 12px;
             }}
 
             .workstation-box-lbl {{
@@ -674,11 +650,11 @@ with tab_estacion:
                 background: rgba(5, 9, 20, 0.95);
                 border: 1px solid rgba(56, 189, 248, 0.25);
                 border-radius: 10px;
-                padding: 12px;
+                padding: 10px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                margin-bottom: 16px;
+                margin-bottom: 14px;
                 box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
             }}
 
@@ -688,7 +664,7 @@ with tab_estacion:
             }}
 
             .btn-primary {{
-                flex: 1.6;
+                flex: 1.5;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
@@ -697,11 +673,12 @@ with tab_estacion:
                 text-decoration: none;
                 font-family: 'JetBrains Mono', monospace;
                 font-weight: 700;
-                font-size: 0.88rem;
+                font-size: 0.86rem;
                 border-radius: 6px;
                 padding: 12px;
                 box-shadow: 0 0 20px rgba(37, 99, 235, 0.5);
                 border: 1px solid rgba(226, 232, 240, 0.25);
+                cursor: pointer;
                 transition: all 0.2s ease;
             }}
 
@@ -711,7 +688,7 @@ with tab_estacion:
             }}
 
             .btn-verify {{
-                flex: 1.1;
+                flex: 1.2;
                 background: rgba(14, 20, 38, 0.95);
                 color: #e2e8f0;
                 border: 1px solid rgba(203, 213, 225, 0.25);
@@ -738,21 +715,36 @@ with tab_estacion:
         </head>
         <body>
 
+        <!-- BARRA MAESTRA DE AUDITORÍA -->
+        <div class="audit-header-bar">
+            <div class="audit-bar-top">
+                <span style="color:#cbd5e1; font-weight:700;">AUDITORÍA DE PORTAFOLIO</span>
+                <span id="audit-stats-text" style="color:#38bdf8; font-weight:700;">00 de 19 verificadas (0%)</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="audit-progress-fill" style="width: 4%;"></div>
+            </div>
+        </div>
+
+        <div class="celebration-banner" id="celebration-banner">
+            ✦ AUDITORÍA COMPLETA // 19 DE 19 SISTEMAS REVISADOS Y VERIFICADOS ✦
+        </div>
+
         <div class="deck-wrapper">
-            <!-- ESTANTE PATERNOSTER -->
+            <!-- ESTANTE PATERNOSTER INFINITO -->
             <div class="paternoster-container">
                 <div class="paternoster-header">
-                    <span style="color:#cbd5e1;">ESTANTE PATERNOSTER // ENLACE CINEMÁTICO</span>
-                    <span id="paternoster-status" style="color:#38bdf8;">ARRASTRE O GIRO ↕</span>
+                    <span style="color:#cbd5e1;">PATERNOSTER INFINITO ↕</span>
+                    <span id="wheel-indicator" style="color:#38bdf8;">ANILLO CONTINUO</span>
                 </div>
                 
                 <div class="paternoster-viewport" id="viewport">
                     <div class="paternoster-aperture"></div>
-                    <div class="paternoster-track" id="track"></div>
+                    <div id="cards-container"></div>
                 </div>
             </div>
 
-            <!-- ESTACIÓN LATERAL -->
+            <!-- ESTACIÓN LATERAL DE INSPECCIÓN -->
             <div class="workstation-container" id="workstation">
                 <div>
                     <div class="workstation-top">
@@ -763,35 +755,39 @@ with tab_estacion:
                     <div class="workstation-desc" id="ws-desc">Encuadra y cuantifica 80 clases comunes de objetos en imágenes o video en vivo.</div>
                     <div class="workstation-box" id="ws-box">
                         <div class="workstation-box-lbl" id="ws-box-lbl">USO PRÁCTICO</div>
-                        <div style="font-size:0.88rem; color:#cbd5e1;" id="ws-uso">Control de aforo y logística de inventario.</div>
+                        <div style="font-size:0.86rem; color:#cbd5e1;" id="ws-uso">Control de aforo y logística de inventario.</div>
                     </div>
                 </div>
 
                 <div class="workstation-hud" id="ws-hud"></div>
 
                 <div class="action-deck">
-                    <a href="#" target="_blank" class="btn-primary" id="ws-link">Abrir Aplicación ↗</a>
-                    <button class="btn-verify" id="ws-btn-verify" onclick="toggleVerification()">Marcar Verificada</button>
+                    <button class="btn-primary" id="ws-btn-open" onclick="handleOpenApp()">Abrir Aplicación ↗</button>
+                    <button class="btn-verify" id="ws-btn-verify" onclick="handleToggleVerify()">Marcar como vista</button>
                 </div>
             </div>
         </div>
 
         <script>
         const APPS = {APPS_JSON};
-        const CARD_HEIGHT = 96; // 86px + 10px margen
-        let currentY = 0;
+        const TOTAL_APPS = APPS.length;
+        const CARD_HEIGHT = 96;
+        const LOOP_HEIGHT = TOTAL_APPS * CARD_HEIGHT;
+
+        let currentScrollY = 0;
         let isDragging = false;
         let startY = 0;
         let startScrollY = 0;
         let focusedIndex = 0;
-        let verifiedApps = new Set(JSON.parse(localStorage.getItem('krov_verified_apps') || '[]'));
+        let focusTimer = null;
+        let verifiedApps = new Set(JSON.parse(localStorage.getItem('krov_audit_seen') || '[]'));
 
-        const track = document.getElementById('track');
         const viewport = document.getElementById('viewport');
-        const vpHeight = viewport.clientHeight || 510;
+        const cardsContainer = document.getElementById('cards-container');
+        const vpHeight = viewport.clientHeight || 470;
         const centerOffset = (vpHeight / 2) - (CARD_HEIGHT / 2);
 
-        // Construcción DOM de tarjetas en el estante
+        // Construcción DOM de las 19 tarjetas
         APPS.forEach((app, idx) => {{
             const card = document.createElement('div');
             card.className = 'shelf-card';
@@ -802,6 +798,9 @@ with tab_estacion:
             info.innerHTML = `
                 <div class="shelf-card-title">
                     <span>${{app.icon}}</span> <span>${{app.titulo}}</span>
+                    <span id="check-tag-${{app.id}}" style="font-size:0.72rem; color:${{app.color}}; margin-left:auto; font-family:'JetBrains Mono';">
+                        ${{verifiedApps.has(app.id) ? '✓ VISTA' : '○'}}
+                    </span>
                 </div>
                 <div class="shelf-card-desc">${{app.desc}}</div>
             `;
@@ -818,78 +817,91 @@ with tab_estacion:
             card.appendChild(info);
             card.appendChild(btnVer);
             card.onclick = () => snapToIndex(idx);
-            track.appendChild(card);
+            cardsContainer.appendChild(card);
         }});
 
-        function updateCardsVisuals() {{
-            const cards = track.children;
+        // --- MATEMÁTICA DEL PATERNOSTER INFINITO (ANILLO CONTINUO) ---
+        function updatePaternosterShelf() {{
+            const cards = cardsContainer.children;
             let closestIdx = 0;
             let closestDist = Infinity;
 
-            for (let i = 0; i < cards.length; i++) {{
+            for (let i = 0; i < TOTAL_APPS; i++) {{
                 const card = cards[i];
-                const cardCenter = (i * CARD_HEIGHT) + currentY + (CARD_HEIGHT / 2);
-                const viewportCenter = vpHeight / 2;
-                const dist = Math.abs(viewportCenter - cardCenter);
-                const normalizedDist = dist / (vpHeight / 2);
+                const rawPos = (i * CARD_HEIGHT) + currentScrollY;
+
+                // Envoltura toroidal continua sin límites superior o inferior
+                let delta = (((rawPos % LOOP_HEIGHT) + LOOP_HEIGHT) % LOOP_HEIGHT);
+                if (delta > LOOP_HEIGHT / 2) {{
+                    delta -= LOOP_HEIGHT;
+                }}
+
+                const yPos = centerOffset + delta;
+                const dist = Math.abs(delta);
+                const normDist = dist / (vpHeight / 2);
 
                 if (dist < closestDist) {{
                     closestDist = dist;
                     closestIdx = i;
                 }}
 
-                // Profundidad de campo: opacidad, escala y desenfoque relativos al foco
-                const opacity = Math.max(0.18, 1 - (normalizedDist * 0.78));
-                const scale = Math.max(0.86, 1 - (normalizedDist * 0.14));
-                const blur = Math.min(2.5, normalizedDist * 1.8);
+                // Profundidad de campo visual
+                const opacity = Math.max(0.12, 1 - (normDist * 0.85));
+                const scale = Math.max(0.85, 1 - (normDist * 0.15));
+                const blur = Math.min(2.5, normDist * 2);
 
+                card.style.transform = `translateY(${{yPos}}px) scale(${{scale}})`;
                 card.style.opacity = opacity;
-                card.style.transform = `scale(${{scale}})`;
                 card.style.filter = `blur(${{blur}}px)`;
-
-                // Eyección lateral del botón de inspección
-                const btn = document.getElementById(`btn-ver-${{i}}`);
-                if (btn) {{
-                    if (dist < (CARD_HEIGHT / 2)) {{
-                        btn.classList.add('visible');
-                    }} else {{
-                        btn.classList.remove('visible');
-                    }}
-                }}
             }}
+
+            // Retardo controlado para eyección del botón
+            clearTimeout(focusTimer);
+            hideAllEjectedButtons();
 
             if (closestIdx !== focusedIndex) {{
                 focusedIndex = closestIdx;
                 updateWorkstation(APPS[focusedIndex]);
             }}
+
+            focusTimer = setTimeout(() => {{
+                const activeBtn = document.getElementById(`btn-ver-${{focusedIndex}}`);
+                if (activeBtn) {{
+                    activeBtn.classList.add('visible');
+                }}
+            }}, 260);
         }}
 
-        function setTrackPosition(y) {{
-            const minY = -((APPS.length - 1) * CARD_HEIGHT) + centerOffset;
-            const maxY = centerOffset;
-            currentY = Math.max(minY, Math.min(maxY, y));
-            track.style.transform = `translateY(${{currentY}}px)`;
-            updateCardsVisuals();
+        function hideAllEjectedButtons() {{
+            const btns = document.querySelectorAll('.ejected-btn');
+            btns.forEach(b => b.classList.remove('visible'));
         }}
 
         function snapToIndex(idx) {{
-            focusedIndex = Math.max(0, Math.min(APPS.length - 1, idx));
-            const targetY = -(focusedIndex * CARD_HEIGHT) + centerOffset;
-            setTrackPosition(targetY);
+            // Salto circular por el camino más corto
+            let diff = idx - focusedIndex;
+            if (diff > TOTAL_APPS / 2) diff -= TOTAL_APPS;
+            if (diff < -TOTAL_APPS / 2) diff += TOTAL_APPS;
+
+            currentScrollY -= diff * CARD_HEIGHT;
+            updatePaternosterShelf();
         }}
 
-        // Gestores de arrastre continuo con ratón (Pointer Events)
+        // Arrastre con ratón (Pointer Events de baja latencia)
         viewport.addEventListener('pointerdown', (e) => {{
             isDragging = true;
             startY = e.clientY;
-            startScrollY = currentY;
+            startScrollY = currentScrollY;
             viewport.setPointerCapture(e.pointerId);
+            clearTimeout(focusTimer);
+            hideAllEjectedButtons();
         }});
 
         viewport.addEventListener('pointermove', (e) => {{
             if (!isDragging) return;
             const dy = e.clientY - startY;
-            setTrackPosition(startScrollY + dy);
+            currentScrollY = startScrollY + dy;
+            updatePaternosterShelf();
         }});
 
         viewport.addEventListener('pointerup', (e) => {{
@@ -901,19 +913,78 @@ with tab_estacion:
 
         viewport.addEventListener('wheel', (e) => {{
             e.preventDefault();
-            setTrackPosition(currentY - (e.deltaY * 0.7));
+            currentScrollY -= e.deltaY * 0.75;
+            updatePaternosterShelf();
             snapToIndex(focusedIndex);
         }}, {{ passive: false }});
 
-        // Actualización reactiva de la estación de trabajo lateral
+        // Soporte de navegación por teclado (▲ / ▼)
+        window.addEventListener('keydown', (e) => {{
+            if (e.key === 'ArrowUp') {{
+                snapToIndex((focusedIndex - 1 + TOTAL_APPS) % TOTAL_APPS);
+            }} else if (e.key === 'ArrowDown') {{
+                snapToIndex((focusedIndex + 1) % TOTAL_APPS);
+            }}
+        }});
+
+        // --- GESTIÓN DE AUDITORÍA Y ACCIONES ---
+        function markAppAsSeen(id) {{
+            if (!verifiedApps.has(id)) {{
+                verifiedApps.add(id);
+                localStorage.setItem('krov_audit_seen', JSON.stringify(Array.from(verifiedApps)));
+                const checkTag = document.getElementById(`check-tag-${{id}}`);
+                if (checkTag) checkTag.innerHTML = '✓ VISTA';
+                updateAuditProgressBar();
+            }}
+        }}
+
+        function handleOpenApp() {{
+            const currentApp = APPS[focusedIndex];
+            markAppAsSeen(currentApp.id);
+            window.open(currentApp.url, '_blank');
+            updateWorkstation(currentApp);
+        }}
+
+        function handleToggleVerify() {{
+            const currentApp = APPS[focusedIndex];
+            if (verifiedApps.has(currentApp.id)) {{
+                verifiedApps.delete(currentApp.id);
+                const checkTag = document.getElementById(`check-tag-${{currentApp.id}}`);
+                if (checkTag) checkTag.innerHTML = '○';
+            }} else {{
+                verifiedApps.add(currentApp.id);
+                const checkTag = document.getElementById(`check-tag-${{currentApp.id}}`);
+                if (checkTag) checkTag.innerHTML = '✓ VISTA';
+            }}
+            localStorage.setItem('krov_audit_seen', JSON.stringify(Array.from(verifiedApps)));
+            updateAuditProgressBar();
+            updateWorkstation(currentApp);
+        }}
+
+        function updateAuditProgressBar() {{
+            const count = verifiedApps.size;
+            const pct = Math.round((count / TOTAL_APPS) * 100);
+            document.getElementById('audit-stats-text').innerText = `${{String(count).padStart(2, '0')}} de ${{TOTAL_APPS}} verificadas (${{pct}}%)`;
+            document.getElementById('audit-progress-fill').style.width = `${{Math.max(4, pct)}}%`;
+
+            // Verificación del estado final de 19/19
+            const banner = document.getElementById('celebration-banner');
+            if (count === TOTAL_APPS) {{
+                document.body.classList.add('hyperspace-active');
+                banner.style.display = 'block';
+            }} else {{
+                document.body.classList.remove('hyperspace-active');
+                banner.style.display = 'none';
+            }}
+        }}
+
         function updateWorkstation(app) {{
             document.getElementById('ws-cat').innerText = app.cat.toUpperCase();
             document.getElementById('ws-cat').style.color = app.color;
-            document.getElementById('ws-counter').innerText = `#${{String(app.id).padStart(2, '0')}} / 19`;
+            document.getElementById('ws-counter').innerText = `#${{String(app.id).padStart(2, '0')}} / ${{TOTAL_APPS}}`;
             document.getElementById('ws-title').innerText = app.titulo;
             document.getElementById('ws-desc').innerText = app.desc;
             document.getElementById('ws-uso').innerText = app.uso;
-            document.getElementById('ws-link').href = app.url;
 
             const ws = document.getElementById('workstation');
             ws.style.borderTopColor = app.color;
@@ -922,110 +993,100 @@ with tab_estacion:
 
             const btnVerify = document.getElementById('ws-btn-verify');
             if (verifiedApps.has(app.id)) {{
-                btnVerify.innerText = '✓ Verificada';
+                btnVerify.innerText = '✓ Marcada como vista';
                 btnVerify.classList.add('checked');
             }} else {{
-                btnVerify.innerText = 'Marcar Verificada';
+                btnVerify.innerText = 'Marcar como vista';
                 btnVerify.classList.remove('checked');
             }}
 
             renderHUD(app.svg_type, app.color);
         }}
 
-        function toggleVerification() {{
-            const currentApp = APPS[focusedIndex];
-            if (verifiedApps.has(currentApp.id)) {{
-                verifiedApps.delete(currentApp.id);
-            }} else {{
-                verifiedApps.add(currentApp.id);
-            }}
-            localStorage.setItem('krov_verified_apps', JSON.stringify(Array.from(verifiedApps)));
-            updateWorkstation(currentApp);
-        }}
-
-        // Generador de HUDs hiper-saturados
         function renderHUD(type, color) {{
             const hudContainer = document.getElementById('ws-hud');
             if (type === 'iot') {{
                 hudContainer.innerHTML = `
-                    <svg width="220" height="145" viewBox="0 0 220 145">
+                    <svg width="220" height="135" viewBox="0 0 220 135">
                         <style>
-                            .spin-r {{ transform-origin: 110px 72px; animation: rClock 10s linear infinite; }}
+                            .spin-r {{ transform-origin: 110px 68px; animation: rClock 10s linear infinite; }}
                             .pulse-w {{ animation: pW 1.8s ease-in-out infinite alternate; }}
                             @keyframes rClock {{ 0% {{ transform: rotate(0deg); }} 100% {{ transform: rotate(360deg); }} }}
-                            @keyframes pW {{ 0% {{ opacity: 0.3; r: 35px; }} 100% {{ opacity: 0.9; r: 52px; }} }}
+                            @keyframes pW {{ 0% {{ opacity: 0.3; r: 35px; }} 100% {{ opacity: 0.9; r: 50px; }} }}
                         </style>
-                        <circle cx="110" cy="72" r="54" fill="none" stroke="rgba(203,213,225,0.15)" stroke-width="1" stroke-dasharray="4 4"/>
-                        <circle class="pulse-w" cx="110" cy="72" r="45" fill="none" stroke="${{color}}" stroke-width="1.4"/>
-                        <circle class="spin-r" cx="110" cy="72" r="28" fill="none" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="6 4"/>
-                        <circle cx="110" cy="72" r="6" fill="#38bdf8"/>
-                        <text x="110" y="138" font-family="'JetBrains Mono'" font-size="8.5" fill="#cbd5e1" text-anchor="middle">MQTT NODO ENLACE PERSISTENTE</text>
+                        <circle cx="110" cy="68" r="52" fill="none" stroke="rgba(203,213,225,0.15)" stroke-width="1" stroke-dasharray="4 4"/>
+                        <circle class="pulse-w" cx="110" cy="68" r="45" fill="none" stroke="${{color}}" stroke-width="1.4"/>
+                        <circle class="spin-r" cx="110" cy="68" r="26" fill="none" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="6 4"/>
+                        <circle cx="110" cy="68" r="5" fill="#38bdf8"/>
+                        <text x="110" y="128" font-family="'JetBrains Mono'" font-size="8" fill="#cbd5e1" text-anchor="middle">MQTT ENLACE PERSISTENTE QOS 1</text>
                     </svg>
                 `;
             }} else if (type === 'vision') {{
                 hudContainer.innerHTML = `
-                    <svg width="220" height="145" viewBox="0 0 220 145">
+                    <svg width="220" height="135" viewBox="0 0 220 135">
                         <style>
-                            .sweep {{ animation: swY 2.4s ease-in-out infinite alternate; }}
-                            .rot-c {{ transform-origin: 110px 72px; animation: rClock 12s linear infinite; }}
-                            @keyframes swY {{ 0% {{ transform: translateY(18px); }} 100% {{ transform: translateY(124px); }} }}
+                            .sw {{ animation: swY 2.4s ease-in-out infinite alternate; }}
+                            .rc {{ transform-origin: 110px 68px; animation: rClock 12s linear infinite; }}
+                            @keyframes swY {{ 0% {{ transform: translateY(16px); }} 100% {{ transform: translateY(118px); }} }}
                         </style>
-                        <rect x="15" y="14" width="190" height="116" fill="none" stroke="rgba(203,213,225,0.18)" stroke-width="1" rx="6"/>
-                        <circle class="rot-c" cx="110" cy="72" r="42" fill="none" stroke="${{color}}" stroke-width="1.3" stroke-dasharray="8 5"/>
-                        <rect x="78" y="42" width="64" height="60" fill="none" stroke="${{color}}" stroke-width="1.2"/>
-                        <line class="sweep" x1="18" y1="0" x2="202" y2="0" stroke="${{color}}" stroke-width="1.6"/>
-                        <text x="110" y="76" font-family="'JetBrains Mono'" font-size="8.5" fill="#ffffff" text-anchor="middle">TRACKING ÓPTICO</text>
+                        <rect x="18" y="12" width="184" height="110" fill="none" stroke="rgba(203,213,225,0.18)" stroke-width="1" rx="6"/>
+                        <circle class="rc" cx="110" cy="68" r="40" fill="none" stroke="${{color}}" stroke-width="1.3" stroke-dasharray="8 5"/>
+                        <rect x="78" y="38" width="64" height="60" fill="none" stroke="${{color}}" stroke-width="1.2"/>
+                        <line class="sw" x1="20" y1="0" x2="200" y2="0" stroke="${{color}}" stroke-width="1.6"/>
+                        <text x="110" y="72" font-family="'JetBrains Mono'" font-size="8.5" fill="#ffffff" text-anchor="middle">TRACKING ÓPTICO</text>
                     </svg>
                 `;
             }} else if (type === 'audio') {{
                 hudContainer.innerHTML = `
-                    <svg width="220" height="145" viewBox="0 0 220 145">
+                    <svg width="220" height="135" viewBox="0 0 220 135">
                         <style>
                             .b1 {{ transform-origin: bottom; animation: bS 0.9s ease-in-out infinite alternate; }}
                             .b2 {{ transform-origin: bottom; animation: bS 0.7s ease-in-out infinite 0.2s alternate; }}
                             @keyframes bS {{ 0% {{ transform: scaleY(0.3); }} 100% {{ transform: scaleY(1.2); }} }}
                         </style>
-                        <circle cx="110" cy="68" r="40" fill="none" stroke="#cbd5e1" stroke-width="1" opacity="0.25"/>
-                        <g transform="translate(62, 68)">
-                            <rect class="b1" x="0" y="-20" width="7" height="40" rx="2" fill="${{color}}"/>
-                            <rect class="b2" x="16" y="-30" width="7" height="60" rx="2" fill="#38bdf8"/>
-                            <rect class="b1" x="32" y="-38" width="7" height="76" rx="2" fill="${{color}}"/>
-                            <rect class="b2" x="48" y="-26" width="7" height="52" rx="2" fill="#c084fc"/>
-                            <rect class="b1" x="64" y="-16" width="7" height="32" rx="2" fill="#cbd5e1"/>
+                        <circle cx="110" cy="65" r="38" fill="none" stroke="#cbd5e1" stroke-width="1" opacity="0.25"/>
+                        <g transform="translate(64, 65)">
+                            <rect class="b1" x="0" y="-18" width="6" height="36" rx="2" fill="${{color}}"/>
+                            <rect class="b2" x="15" y="-28" width="6" height="56" rx="2" fill="#38bdf8"/>
+                            <rect class="b1" x="30" y="-36" width="6" height="72" rx="2" fill="${{color}}"/>
+                            <rect class="b2" x="45" y="-24" width="6" height="48" rx="2" fill="#c084fc"/>
+                            <rect class="b1" x="60" y="-14" width="6" height="28" rx="2" fill="#cbd5e1"/>
                         </g>
-                        <text x="110" y="136" font-family="'JetBrains Mono'" font-size="8.5" fill="#cbd5e1" text-anchor="middle">SÍNTESIS ACÚSTICA HARMONIC</text>
+                        <text x="110" y="128" font-family="'JetBrains Mono'" font-size="8.5" fill="#cbd5e1" text-anchor="middle">SÍNTESIS ACÚSTICA HARMONIC</text>
                     </svg>
                 `;
             }} else {{
                 hudContainer.innerHTML = `
-                    <svg width="220" height="145" viewBox="0 0 220 145">
+                    <svg width="220" height="135" viewBox="0 0 220 135">
                         <style>
-                            .rot-n {{ transform-origin: 110px 72px; animation: rClock 16s linear infinite; }}
-                            .pul-n {{ animation: pW 2s ease-in-out infinite alternate; }}
+                            .rn {{ transform-origin: 110px 68px; animation: rClock 16s linear infinite; }}
+                            .pn {{ animation: pW 2s ease-in-out infinite alternate; }}
                         </style>
-                        <circle class="rot-n" cx="110" cy="72" r="50" fill="none" stroke="rgba(203,213,225,0.18)" stroke-width="1" stroke-dasharray="8 6"/>
-                        <circle class="pul-n" cx="110" cy="72" r="28" fill="none" stroke="${{color}}" stroke-width="1.3"/>
-                        <circle cx="110" cy="72" r="6" fill="#38bdf8"/>
-                        <text x="110" y="136" font-family="'JetBrains Mono'" font-size="8.5" fill="#cbd5e1" text-anchor="middle">RED TENSORES CLASIFICACIÓN</text>
+                        <circle class="rn" cx="110" cy="68" r="48" fill="none" stroke="rgba(203,213,225,0.18)" stroke-width="1" stroke-dasharray="8 6"/>
+                        <circle class="pn" cx="110" cy="68" r="26" fill="none" stroke="${{color}}" stroke-width="1.3"/>
+                        <circle cx="110" cy="68" r="5" fill="#38bdf8"/>
+                        <text x="110" y="128" font-family="'JetBrains Mono'" font-size="8.5" fill="#cbd5e1" text-anchor="middle">RED TENSORES VECTORIAL</text>
                     </svg>
                 `;
             }}
         }}
 
-        // Inicialización inmediata en el índice 0
+        // Inicialización
+        updatePaternosterShelf();
+        updateAuditProgressBar();
         snapToIndex(0);
         </script>
         </body>
         </html>
         """,
-        height=640
+        height=690
     )
 
 # ==============================================================================
 # PESTAÑA 2: DIRECTORIO COMPLETO EN MATRIZ (19 APLICACIONES)
 # ==============================================================================
 with tab_matriz:
-    st.caption("Visión panorámica de las 19 aplicaciones desarrolladas.")
+    st.caption("Visión panorámica de todas las aplicaciones desarrolladas.")
 
     grid_cards_html = ['<div class="grid-container">']
     for item in CATALOGO:
@@ -1052,7 +1113,7 @@ with tab_matriz:
 
 st.write("")
 render_clean_html("""
-<div style="text-align:center; padding:1.5rem 0; border-top:1px solid rgba(203,213,225,0.12); margin-top:1.5rem;">
+<div style="text-align:center; padding:1.2rem 0; border-top:1px solid rgba(203,213,225,0.12); margin-top:1.2rem;">
     <div style="font-family:'JetBrains Mono'; font-size:0.72rem; letter-spacing:0.2em; color:#cbd5e1; text-transform:uppercase;">
         PORTAFOLIO DE SISTEMAS E INTERFACES MULTIMODALES
     </div>
